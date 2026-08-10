@@ -1,0 +1,1527 @@
+<!doctype html>
+<!--
+  DELTA·4C — variante "LUZ DE DÍA 3D"
+  Referencia de diseño: Linear light mode + Stripe restraint, con carácter propio.
+  Base blanca verdadera, tinta azul-noche, naranja quemado (acción) + verde bosque (confianza).
+  Bricolage Grotesque (display) + Figtree (texto). Ease-out expo en todo el motion.
+
+  Capa 3D (three.js, vendored + fallback unpkg): wireframes finos azul-noche sobre blanco,
+  depth cueing por niebla blanca — nada de neones.
+  · Hero: red de nodos 3D (los sistemas) orbitando hacia un núcleo Δ octaédrico con ápice
+    naranja; puntos naranja/tinta/verde viajan por las aristas curvas; parallax al mouse.
+  · Ciclo: anillos armilares 3D girando lento ligados al scroll, detrás de la órbita SVG.
+  · Nosotros: dos planos wireframe que se interpenetran detrás del nodo "nosotros".
+  · Grano de profundidad: partículas gris-azuladas casi imperceptibles, parallax por capas.
+  Sin WebGL (o reduced-motion): html.webgl-off → la página completa con sus SVG originales.
+-->
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Delta 4C — Hacemos que tus sistemas trabajen juntos, para vos</title>
+<meta name="description" content="Hacemos que tus sistemas trabajen juntos, para vos, sin romper lo que ya anda. Leemos tus datos sin tocar lo que factura y construimos arriba lo que te falta.">
+<link rel="canonical" href="https://delta4c.vercel.app/">
+<meta name="robots" content="noindex,nofollow">
+
+<!-- previsualizacion al compartir el link (WhatsApp, LinkedIn, Slack) -->
+<meta property="og:type" content="website">
+<meta property="og:locale" content="es_AR">
+<meta property="og:site_name" content="Delta 4C">
+<meta property="og:url" content="https://delta4c.vercel.app/">
+<meta property="og:title" content="Hacemos que tus sistemas trabajen juntos, para vos">
+<meta property="og:description" content="Leemos tus datos sin tocar lo que factura, y construimos arriba lo que te falta: tu negocio entero, en un solo lugar.">
+<meta property="og:image" content="https://delta4c.vercel.app/og.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="Delta 4C - Hacemos que tus sistemas trabajen juntos, para vos">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Hacemos que tus sistemas trabajen juntos, para vos">
+<meta name="twitter:description" content="Leemos tus datos sin tocar lo que factura, y construimos arriba lo que te falta.">
+<meta name="twitter:image" content="https://delta4c.vercel.app/og.png">
+<meta name="theme-color" content="#ffffff">
+
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'><defs><linearGradient id='g' x1='0' y1='1' x2='1' y2='0'><stop offset='0' stop-color='%234C6DBC'/><stop offset='1' stop-color='%23CC9744'/></linearGradient></defs><rect width='64' height='64' rx='14' fill='%230A0A12'/><path d='M32 15 L51 49 H13 Z' fill='url(%23g)'/></svg>">
+<link rel="icon" type="image/png" sizes="512x512" href="/favicon.png">
+<link rel="apple-touch-icon" href="/apple-touch-icon.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,400..800&family=Figtree:ital,wght@0,400..700;1,400..700&display=swap" rel="stylesheet">
+<script>document.documentElement.classList.add('js');</script>
+<style>
+/* ============================== TOKENS ============================== */
+:root{
+  --bg:#ffffff;
+  --ink:#242a3d; --ink-2:#525c76; --ink-3:#8d94ad;
+  --line:#e5e7ef; --line-2:#d5d9e5;
+  --naranja:#e0763b; --naranja-deep:#b1531b; --naranja-tinte:#fdf1e7;
+  --verde:#22795a; --verde-deep:#155c42; --verde-tinte:#eaf5ef;
+  --navy:#1b2134;
+  --exp:cubic-bezier(.16,1,.3,1);
+  --e-quart:cubic-bezier(.25,1,.5,1);
+  --e-quint:cubic-bezier(.22,1,.36,1);
+  --f-d:"Bricolage Grotesque",system-ui,sans-serif;
+  --f-t:"Figtree",system-ui,sans-serif;
+}
+@supports (color: oklch(0% 0 0)){
+  :root{
+    --ink:oklch(25% .03 265); --ink-2:oklch(45% .033 265); --ink-3:oklch(65% .025 265);
+    --line:oklch(91.5% .008 265); --line-2:oklch(86% .012 265);
+    --naranja:oklch(68% .17 45); --naranja-deep:oklch(54% .145 45); --naranja-tinte:oklch(96.5% .022 60);
+    --verde:oklch(50% .1 160); --verde-deep:oklch(41% .09 160); --verde-tinte:oklch(96.2% .02 165);
+    --navy:oklch(23% .032 265);
+  }
+}
+/* ============================== BASE ============================== */
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+html,body{overflow-x:clip}
+body{
+  font:400 1.0625rem/1.7 var(--f-t);
+  color:var(--ink); background:var(--bg);
+  -webkit-font-smoothing:antialiased; text-rendering:optimizeLegibility;
+}
+::selection{background:var(--naranja-tinte);color:var(--ink)}
+img,svg{max-width:100%;height:auto}
+a{color:inherit}
+h1,h2,h3,.cierre,.remate{font-family:var(--f-d);letter-spacing:-.025em;text-wrap:balance}
+:focus-visible{outline:2px solid var(--naranja-deep);outline-offset:3px;border-radius:4px}
+.sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
+.marco{width:min(1160px,92vw);margin-inline:auto}
+section{padding-block:clamp(4.5rem,9vw,7.75rem);scroll-margin-top:5rem}
+
+/* nombre de capítulo — minúsculas, sin tracking, con onda naranja */
+.cap{
+  display:flex;align-items:center;gap:.6rem;
+  font:600 1rem/1.2 var(--f-t);color:var(--ink-2);
+  margin-bottom:1.4rem;
+}
+.cap svg{flex:none;color:var(--naranja)}
+
+/* ============================== REVEALS ============================== */
+html.js .r{
+  opacity:.3;transform:translateY(16px);filter:blur(5px);
+  transition:opacity .85s var(--exp),transform .85s var(--exp),filter .85s var(--exp);
+  transition-delay:var(--d,0s);
+}
+html.js .r.in{opacity:1;transform:none;filter:none}
+@media print{
+  html.js .r{opacity:1 !important;transform:none !important;filter:none !important}
+  html.js .dolor .turno,html.js .dolor .consecuencia{opacity:1 !important;transform:none !important}
+  html.flechas .consecuencia svg path{stroke-dashoffset:0 !important}
+  .switch .pista{fill:var(--verde) !important}
+  .switch .perilla{transform:translateX(28px) !important}
+  .progreso{display:none !important}
+}
+
+/* ============================== HEADER ============================== */
+header{
+  position:sticky;top:0;z-index:50;
+  background:#fff;border-bottom:1px solid var(--line);
+}
+.barra{
+  width:min(1160px,92vw);margin-inline:auto;
+  display:flex;align-items:center;gap:2rem;
+  padding-block:.95rem;
+}
+.logo{
+  display:inline-flex;align-items:center;
+  font:700 1.22rem/1 var(--f-d);letter-spacing:-.01em;
+  text-decoration:none;
+}
+.logo img{height:32px;width:auto;display:block;flex:none}
+.logo .punto{color:var(--naranja-deep)}
+.navlinks{display:flex;gap:1.7rem;margin-left:auto}
+.navlinks a{
+  font:500 .98rem/1 var(--f-t);color:var(--ink-2);text-decoration:none;
+  transition:color .3s var(--exp);
+}
+.navlinks a:hover{color:var(--ink)}
+.nav-cta{
+  font:600 .95rem/1 var(--f-t);color:var(--naranja-deep);text-decoration:none;
+  border:1.5px solid var(--line-2);border-radius:999px;padding:.62rem 1.05rem;
+  transition:border-color .3s var(--exp),transform .3s var(--exp),box-shadow .3s var(--exp);
+  white-space:nowrap;
+}
+.nav-cta:hover{border-color:var(--naranja);transform:translateY(-1px);box-shadow:0 8px 20px -12px rgba(180,87,28,.5)}
+/* selector de idioma */
+.idioma{display:inline-flex;align-items:center;gap:.4rem;margin-left:1.5rem;
+  font:600 .9rem/1 var(--f-t);letter-spacing:.02em}
+.idioma a{color:var(--ink-3);text-decoration:none;padding:.2rem .1rem;
+  transition:color .25s var(--e-quart)}
+.idioma a:hover{color:var(--ink)}
+.idioma .actual{color:var(--ink);cursor:default}
+.idioma .sep{color:var(--line-2)}
+@media (max-width:760px){
+  .navlinks{display:none}
+  .idioma{margin-left:auto}
+  .nav-cta{margin-left:.9rem}
+}
+@media (max-width:430px){.nav-cta{font-size:.86rem;padding:.55rem .85rem}}
+
+/* ============================== HERO ============================== */
+.hero{position:relative;overflow:clip;padding-block:clamp(4.5rem,8vw,7rem) clamp(4rem,7vw,6rem)}
+.blob{position:absolute;border-radius:50%;pointer-events:none;z-index:0}
+.b1{width:640px;height:640px;left:-180px;top:-220px;
+  background:radial-gradient(closest-side,oklch(95% .04 60/.9),transparent 72%);
+  background:radial-gradient(closest-side,#fbeadb,transparent 72%);
+  animation:drifta 26s ease-in-out infinite alternate}
+.b2{width:700px;height:700px;right:-240px;top:-120px;
+  background:radial-gradient(closest-side,#e6f3ec,transparent 72%);
+  animation:driftb 32s ease-in-out infinite alternate}
+.b3{width:720px;height:720px;left:26%;bottom:-380px;
+  background:radial-gradient(closest-side,#ecEEfa,transparent 72%);
+  background:radial-gradient(closest-side,#eceefa,transparent 72%);
+  animation:driftc 29s ease-in-out infinite alternate}
+@keyframes drifta{to{transform:translate(70px,50px) scale(1.09)}}
+@keyframes driftb{to{transform:translate(-60px,60px) scale(1.07)}}
+@keyframes driftc{to{transform:translate(-70px,-40px) scale(1.05)}}
+.hero .marco{position:relative;z-index:1;display:grid;grid-template-columns:minmax(0,7fr) minmax(0,5fr);gap:clamp(2rem,5vw,4.5rem);align-items:center}
+.hero h1{
+  font-size:clamp(2.45rem,5.6vw,4.35rem);
+  font-weight:750;line-height:1.04;
+  margin-bottom:1.6rem;
+}
+.hero h1 .l2{display:block}
+.hero .vos{font-style:normal;color:var(--naranja-deep)}
+.lead{font-size:clamp(1.1rem,1.5vw,1.24rem);line-height:1.65;color:var(--ink-2);max-width:56ch}
+.hero .lead{margin-bottom:2.1rem}
+
+/* palabra rotatoria: se escribe sola.
+   Los tres términos quedan apilados e invisibles para fijar el ancho: así el
+   titular nunca salta mientras se teclea. */
+.rotor{display:inline-grid;position:relative;vertical-align:baseline}
+.pila{display:inline-grid}
+.rotor-w{grid-area:1/1;white-space:nowrap;visibility:hidden}
+.rotor-viva{grid-area:1/1;white-space:nowrap;display:inline-block;visibility:visible}
+.cursor{
+  display:inline-block;width:.055em;min-width:2px;height:.74em;
+  background:var(--naranja);margin-left:.06em;
+  animation:latido 1.15s steps(1,end) infinite;
+}
+@keyframes latido{0%,55%{opacity:1}56%,100%{opacity:0}}
+html:not(.js) .rotor-w:first-child{visibility:visible}
+html:not(.js) .rotor-viva{display:none}
+.subraya{
+  position:absolute;left:2%;right:2%;bottom:-.1em;width:96%;height:.24em;
+  overflow:visible;
+}
+.subraya path{
+  stroke:var(--naranja);stroke-width:7;fill:none;stroke-linecap:round;opacity:.85;
+  stroke-dasharray:100;stroke-dashoffset:0;
+  transition:stroke-dashoffset .5s var(--e-quint);
+}
+/* mientras se teclea el subrayado se retira; vuelve a trazarse al completar la palabra */
+.rotor.tecleando .subraya path{stroke-dashoffset:100;transition-duration:.2s}
+
+/* chips */
+.chips{list-style:none;display:flex;flex-wrap:wrap;gap:.6rem 1rem}
+.chips li{
+  display:inline-flex;align-items:center;gap:.55rem;
+  font:600 .95rem/1 var(--f-t);color:var(--ink-2);
+  border:1.5px solid var(--line);border-radius:999px;
+  padding:.62rem 1rem;background:#fff;
+  transition:transform .35s var(--exp),border-color .35s var(--exp),box-shadow .35s var(--exp);
+}
+.chips li:hover{transform:translateY(-2px);border-color:var(--line-2);box-shadow:0 10px 24px -16px rgba(36,42,61,.35)}
+.dot{width:9px;height:9px;border-radius:50%;flex:none}
+.d-azul{background:var(--ink-2)}
+.d-verde{background:var(--verde)}
+.d-naranja{background:var(--naranja)}
+
+/* flujo del hero */
+.flujo{width:100%;max-width:480px;justify-self:end;display:block}
+.flujo .cable{stroke:var(--line-2);stroke-width:2;fill:none;stroke-linecap:round}
+.flujo .caja{fill:#fff;stroke:var(--line-2);stroke-width:1.6}
+.flujo .glifo{stroke:var(--ink-3);stroke-width:3;stroke-linecap:round;fill:none}
+.flujo .glifo-fill{fill:var(--ink-3)}
+.flujo .nodo-delta rect{fill:#fff;stroke:var(--ink);stroke-width:2}
+.flujo .tri{fill:none;stroke:var(--ink);stroke-width:3.4;stroke-linejoin:round}
+.flujo .apice{fill:var(--naranja)}
+.flujo .pulso{fill:none;stroke:var(--naranja);stroke-width:1.6;opacity:0;
+  transform-box:fill-box;transform-origin:center;
+  animation:pulsar 3.4s var(--exp) infinite}
+@keyframes pulsar{0%{transform:scale(.72);opacity:.5}70%{opacity:0}100%{transform:scale(1.22);opacity:0}}
+.viaja{opacity:0}
+.v1{fill:var(--naranja);offset-path:path('M100 68 C 190 68, 252 138, 334 194')}
+.v2{fill:var(--ink-2);offset-path:path('M80 218 C 170 218, 250 220, 334 220');animation-delay:1.2s !important}
+.v3{fill:var(--verde);offset-path:path('M100 368 C 190 368, 252 302, 334 246');animation-delay:2.3s !important}
+.flujo .viaja{animation:viajar 3.6s linear infinite}
+@keyframes viajar{
+  0%{offset-distance:0%;opacity:0}
+  12%{opacity:1}
+  86%{opacity:1}
+  100%{offset-distance:100%;opacity:0}
+}
+.sombra{filter:drop-shadow(0 10px 18px rgba(36,42,61,.10))}
+
+/* ============================== 01 PROBLEMA ============================== */
+#problema .marco{position:relative}
+#problema h2{
+  font-size:clamp(1.95rem,4vw,3.05rem);font-weight:700;line-height:1.12;
+  max-width:24ch;margin-bottom:2.4rem;
+}
+#problema .lead{margin-left:auto;max-width:58ch}
+#problema .lead strong{color:var(--ink);font-weight:700}
+.sueltos{position:absolute;right:0;top:.4rem;color:var(--ink-3);opacity:.85}
+.sueltos .mini{fill:#fff;stroke:var(--line-2);stroke-width:1.5}
+.sueltos .tramo{stroke:var(--line-2);stroke-width:2;stroke-linecap:round;stroke-dasharray:1 7;fill:none}
+@media (max-width:900px){.sueltos{display:none}}
+
+/* ============================== 02 DOLORES ============================== */
+#dolores .encabezado{max-width:760px;margin-bottom:clamp(2.8rem,5vw,4rem)}
+#dolores h2{font-size:clamp(1.95rem,4vw,3.05rem);font-weight:700;line-height:1.12;margin-bottom:1.1rem}
+.charla{max-width:880px;margin-inline:auto;display:flex;flex-direction:column;gap:clamp(2.3rem,4.5vw,3.4rem)}
+.turno{display:flex;align-items:flex-end;gap:.85rem}
+.turno.delta{justify-content:flex-end}
+.avatar{
+  flex:none;width:42px;height:42px;display:grid;place-items:center;
+  border-radius:50%;background:#eef0f6;color:var(--ink-2);
+}
+.avatar-delta{border-radius:13px;background:var(--navy);color:#fff}
+.globo{
+  position:relative;max-width:30rem;
+  padding:1.05rem 1.35rem;
+  box-shadow:0 14px 34px -24px rgba(36,42,61,.5);
+  transition:transform .4s var(--exp),box-shadow .4s var(--exp);
+}
+.globo:hover{transform:translateY(-3px);box-shadow:0 20px 40px -24px rgba(36,42,61,.55)}
+.globo-vos{
+  font:600 1.22rem/1.4 var(--f-d);letter-spacing:-.015em;
+  background:#fff;border:1.5px solid var(--line-2);
+  border-radius:20px 20px 20px 6px;
+}
+.globo-delta{
+  font:600 1.05rem/1.5 var(--f-t);color:var(--verde-deep);
+  background:var(--verde-tinte);border:1px solid #cfe6da;
+  border-radius:20px 20px 6px 20px;
+  display:flex;align-items:center;gap:.65rem;
+}
+.globo-delta svg{flex:none;color:var(--verde)}
+.consecuencia{
+  display:flex;align-items:baseline;gap:.55rem;
+  margin:.75rem 0 .9rem 3.4rem;
+  font-size:1rem;color:var(--ink-2);
+}
+.consecuencia svg{flex:none;color:var(--naranja);transform:translateY(2px)}
+/* ritmo alternado: la conversación deriva */
+.dolor:nth-child(even) .turno.vos{padding-left:clamp(0rem,7vw,4.5rem)}
+.dolor:nth-child(even) .consecuencia{margin-left:clamp(3.4rem,12vw,8rem)}
+.dolor:nth-child(odd) .turno.delta{padding-right:clamp(0rem,5vw,3rem)}
+.cierre{
+  font-size:clamp(1.45rem,2.8vw,2.05rem);font-weight:600;line-height:1.3;
+  letter-spacing:-.02em;
+}
+#dolores .cierre{max-width:800px;margin:clamp(3.2rem,6vw,4.5rem) auto 0;text-align:center}
+
+/* ============================== 03 CICLO ============================== */
+#ciclo{background:linear-gradient(180deg,#fff 0%,#fafbfd 18%,#fafbfd 82%,#fff 100%)}
+#ciclo .duo{display:grid;grid-template-columns:minmax(0,5fr) minmax(0,7fr);gap:clamp(2rem,5vw,4rem);align-items:center}
+#ciclo h2{font-size:clamp(1.95rem,4vw,3.05rem);font-weight:700;line-height:1.12;margin-bottom:1.2rem}
+#ciclo .nota{color:var(--ink-2);max-width:44ch}
+.orbita{width:100%;max-width:600px;justify-self:center;display:block}
+.orbita .aro{stroke:var(--line-2);stroke-width:2;stroke-dasharray:3 11;stroke-linecap:round;fill:none}
+.orbita .tic{stroke:var(--naranja);stroke-width:3;stroke-linecap:round}
+.orbita .tic-v{stroke:var(--verde)}
+.orbita .est{fill:#fff;stroke:var(--line-2);stroke-width:2}
+.orbita .est-n{stroke:var(--naranja)}
+.orbita .est-v{stroke:var(--verde)}
+.orbita text{font-family:var(--f-d);font-variant-numeric:tabular-nums}
+.orbita .num{font-size:17px;font-weight:700;fill:var(--ink)}
+.orbita .rotulo{font-size:19px;font-weight:600;fill:var(--ink);letter-spacing:-.01em}
+.orbita .centro-t{font-family:var(--f-t);font-size:15.5px;font-weight:500;fill:var(--ink-2)}
+.orbita .vuelve{fill:none;stroke:var(--ink-3);stroke-width:2.4;stroke-linecap:round}
+.orb-dot{fill:var(--naranja);
+  offset-path:path('M330 100 A190 190 0 1 1 330 480 A190 190 0 1 1 330 100');
+  animation:orbitar 16s linear infinite}
+@keyframes orbitar{from{offset-distance:0%}to{offset-distance:100%}}
+.ciclo-lista{display:none}
+.ciclo-vuelve{display:none}
+#ciclo .cierre{max-width:820px;margin:clamp(3rem,6vw,4.5rem) auto 0;text-align:center;
+  font-size:clamp(1.7rem,3.4vw,2.5rem);font-weight:700;line-height:1.2;letter-spacing:-.025em}
+@media (max-width:980px){
+  #ciclo .duo{grid-template-columns:1fr}
+  .orbita{max-width:520px}
+}
+@media (max-width:600px){
+  .orbita{display:none}
+  .ciclo-lista{display:block;list-style:none;margin-top:1rem}
+  .ciclo-lista li{
+    display:flex;align-items:center;gap:1rem;padding-block:.8rem;
+    font:600 1.15rem/1.3 var(--f-d);letter-spacing:-.01em;
+  }
+  .ciclo-lista li + li{border-top:1px solid var(--line)}
+  .ciclo-lista .n{
+    flex:none;width:38px;height:38px;border-radius:50%;
+    display:grid;place-items:center;background:#fff;border:2px solid var(--line-2);
+    font:700 1rem/1 var(--f-d);font-variant-numeric:tabular-nums;
+  }
+  .ciclo-lista li:first-child .n{border-color:var(--naranja)}
+  .ciclo-lista li:nth-child(4) .n,.ciclo-lista li:nth-child(5) .n{border-color:var(--verde)}
+  .ciclo-vuelve{
+    display:flex;align-items:center;gap:.6rem;margin-top:1.1rem;
+    justify-content:flex-start;
+    font:500 1rem/1.3 var(--f-t);color:var(--ink-2);
+  }
+  .ciclo-vuelve svg{color:var(--ink-3);flex:none}
+}
+
+/* ============================== 04 AUTOMATIZACIÓN ============================== */
+#automatizamos h2{font-size:clamp(1.95rem,4vw,3.05rem);font-weight:700;line-height:1.12;max-width:22ch;margin-bottom:1.1rem}
+#automatizamos > .marco > .lead{max-width:62ch;margin-bottom:clamp(2.8rem,5vw,4rem)}
+.rio{max-width:1080px;margin-inline:auto}
+.fuente-wrap{text-align:center}
+.fuente{
+  display:inline-block;
+  font:600 1.05rem/1.2 var(--f-d);letter-spacing:-.01em;
+  border:2px solid var(--ink);border-radius:999px;
+  padding:.7rem 1.35rem;background:#fff;
+  box-shadow:0 12px 26px -18px rgba(36,42,61,.5);
+}
+.corrientes{display:block;width:100%;margin-block:-.35rem}
+.corrientes .agua{stroke:var(--line-2);stroke-width:2;fill:none;stroke-linecap:round}
+.corrientes .boca{fill:#fff;stroke:var(--line-2);stroke-width:2}
+.gota{opacity:0;animation:viajar 3.2s linear infinite}
+.g-cod{fill:var(--ink-2);offset-path:path('M500 10 C 500 100, 170 78, 170 168')}
+.g-mod{fill:var(--naranja);offset-path:path('M500 10 C 500 70, 500 110, 500 168');animation-delay:1.05s !important}
+.g-hum{fill:var(--verde);offset-path:path('M500 10 C 500 100, 830 78, 830 168');animation-delay:2.1s !important}
+.ramas{display:grid;grid-template-columns:1fr 1fr 1fr;gap:2.2rem;justify-items:center}
+.rama{max-width:30ch;transition:transform .4s var(--exp)}
+.rama:hover{transform:translateY(-4px)}
+.tag{
+  display:inline-block;font:700 .84rem/1 var(--f-t);letter-spacing:.01em;
+  padding:.42rem .7rem;border-radius:9px;margin-bottom:.85rem;
+}
+.t-cod{color:var(--ink);background:#eef0f6}
+.t-mod{color:var(--naranja-deep);background:var(--naranja-tinte)}
+.t-hum{color:var(--verde-deep);background:var(--verde-tinte)}
+.rama h3{font-size:1.42rem;font-weight:700;line-height:1.15;margin-bottom:.55rem}
+.rama p{font-size:1rem;color:var(--ink-2)}
+.cierre-auto{
+  display:flex;align-items:center;gap:1.4rem;
+  max-width:880px;margin:clamp(3rem,5.5vw,4rem) auto 0;
+  background:var(--verde-tinte);border:1px solid #cfe6da;border-radius:22px;
+  padding:1.55rem 1.8rem;
+}
+.cierre-auto p{font-size:1.08rem;line-height:1.6}
+.cierre-auto p strong{font-weight:700}
+.switch{flex:none;overflow:visible}
+.switch .pista{fill:#ccd2e0;transition:fill .5s var(--exp) .4s}
+.switch .perilla{fill:#fff;filter:drop-shadow(0 3px 6px rgba(36,42,61,.3));transition:transform .5s var(--exp) .4s}
+html.js .cierre-auto.in .pista,html:not(.js) .switch .pista{fill:var(--verde)}
+html.js .cierre-auto.in .perilla,html:not(.js) .switch .perilla{transform:translateX(28px)}
+@media (max-width:780px){
+  .corrientes{display:none}
+  .fuente-wrap{text-align:left}
+  .ramas{grid-template-columns:1fr;gap:1.9rem;justify-items:start;
+    margin-top:1.6rem;padding-left:1.4rem;position:relative}
+  .ramas::before{content:"";position:absolute;left:2px;top:-1.2rem;bottom:.5rem;width:2px;
+    background:repeating-linear-gradient(180deg,var(--line-2) 0 5px,transparent 5px 13px)}
+  .rama{max-width:56ch}
+  .cierre-auto{flex-direction:column;align-items:flex-start;gap:1rem}
+}
+
+/* ============================== 05 NOSOTROS ============================== */
+#nosotros h2{font-size:clamp(1.95rem,4vw,3.05rem);font-weight:700;line-height:1.12;max-width:26ch;margin-bottom:clamp(2.6rem,5vw,3.8rem)}
+.cruce{display:grid;grid-template-columns:minmax(0,1fr) 150px minmax(0,1fr);gap:clamp(1.4rem,3.5vw,3rem);align-items:stretch;max-width:1020px;margin-inline:auto}
+.mundo h3{font-size:1.38rem;font-weight:700;margin-bottom:1rem}
+.mundo ul{list-style:none}
+.mundo li{padding-block:.62rem;font:500 1.1rem/1.45 var(--f-t)}
+.mundo li + li{border-top:1px solid var(--line)}
+.mundo-com{text-align:right}
+.mundo-com li::after{content:"";display:inline-block;width:9px;height:9px;border-radius:50%;
+  background:var(--naranja);margin-left:.8rem;transform:translateY(-1px)}
+.mundo-tec li::before{content:"";display:inline-block;width:9px;height:9px;border-radius:50%;
+  background:var(--verde);margin-right:.8rem;transform:translateY(-1px)}
+.medio{display:flex;flex-direction:column;align-items:center}
+.hilo{width:2px;flex:1;min-height:2.2rem;
+  background:repeating-linear-gradient(180deg,var(--line-2) 0 5px,transparent 5px 13px)}
+.nudo img{width:64px;height:auto;display:block}
+.nudo{
+  position:relative;flex:none;width:118px;height:118px;border-radius:50%;
+  display:grid;place-items:center;background:#fff;border:2px solid var(--ink);
+  font:700 1.15rem/1 var(--f-d);letter-spacing:-.01em;
+  box-shadow:0 18px 40px -22px rgba(36,42,61,.55);
+}
+.nudo::before,.nudo::after{content:"";position:absolute;width:12px;height:12px;border-radius:50%;border:2.5px solid #fff}
+.nudo::before{background:var(--naranja);top:12px;left:12px}
+.nudo::after{background:var(--verde);bottom:12px;right:12px}
+.franja{
+  margin-top:clamp(3rem,6vw,4.2rem);
+  border-top:1px solid var(--line);border-bottom:1px solid var(--line);
+  padding-block:1.5rem;
+  display:flex;flex-wrap:wrap;justify-content:center;align-items:baseline;
+  gap:.4rem 1.1rem;text-align:center;
+}
+.franja b{font:600 1.12rem/1.4 var(--f-d);letter-spacing:-.012em;font-weight:600}
+.franja .sep{color:var(--naranja);font-weight:700}
+#nosotros .cierre{max-width:760px;margin:clamp(2.8rem,5vw,3.8rem) auto 0;text-align:center}
+@media (max-width:900px){
+  .cruce{grid-template-columns:1fr;gap:0}
+  .mundo-com{text-align:left}
+  .mundo-com li::after{display:none}
+  .mundo-com li::before{content:"";display:inline-block;width:9px;height:9px;border-radius:50%;
+    background:var(--naranja);margin-right:.8rem;transform:translateY(-1px)}
+  .medio{padding-block:1.9rem}
+  .hilo{display:none}
+}
+
+/* ============================== 06 CTA + FOOTER ============================== */
+#cta{padding-bottom:clamp(3rem,6vw,4.5rem)}
+.panel{
+  position:relative;overflow:clip;
+  background:var(--navy);
+  border-radius:30px;
+  padding:clamp(3rem,7vw,5.5rem) clamp(1.5rem,5vw,4rem);
+  text-align:center;color:#fff;
+}
+.panel .cap{justify-content:center;color:#c8cddd}
+.panel .cap svg{color:var(--naranja)}
+.panel h2{font-size:clamp(2.1rem,4.6vw,3.5rem);font-weight:750;line-height:1.08;margin-bottom:1.3rem}
+.panel .lead{color:#c8cddd;max-width:58ch;margin:0 auto 2.4rem}
+.botones{display:flex;flex-wrap:wrap;justify-content:center;gap:.9rem;margin-bottom:2.2rem}
+.btn{
+  display:inline-flex;align-items:center;gap:.5rem;
+  font:600 1.05rem/1 var(--f-t);text-decoration:none;
+  padding:1rem 1.6rem;border-radius:999px;
+  transition:transform .35s var(--exp),box-shadow .35s var(--exp),background-color .35s var(--exp),border-color .35s var(--exp);
+}
+.btn-primario{background:var(--naranja-deep);color:#fff;box-shadow:0 14px 30px -14px rgba(177,83,27,.75)}
+.btn-primario:hover{transform:translateY(-2px);box-shadow:0 20px 40px -16px rgba(177,83,27,.85)}
+.btn-fantasma{color:#fff;border:1.5px solid rgba(255,255,255,.38)}
+.btn-fantasma:hover{border-color:#fff;transform:translateY(-2px)}
+.fineprint{font-size:.95rem;color:#aab0c4}
+.fineprint a{color:#dfe3ee;text-decoration-color:rgba(255,255,255,.35);text-underline-offset:3px}
+.fineprint a:hover{color:#fff}
+footer{border-top:1px solid var(--line);padding-block:2.6rem 3rem;text-align:center}
+footer .linea{font-size:.98rem;color:var(--ink-2);margin-bottom:.75rem}
+footer .marca-f{font:700 1.02rem/1 var(--f-d);color:var(--ink)}
+footer .marca-f .punto{color:var(--naranja-deep)}
+.remate{font-size:1.35rem;font-weight:650;letter-spacing:-.02em}
+
+/* ============================== RESPONSIVE GLOBAL ============================== */
+@media (max-width:980px){
+  .hero .marco{grid-template-columns:1fr}
+  .flujo{max-width:430px;justify-self:start}
+}
+@media (max-width:640px){
+  .franja{flex-direction:column;align-items:center;gap:.55rem}
+  .franja .sep{display:none}
+}
+@media (max-width:520px){
+  .globo{max-width:88%}
+  .consecuencia{margin-left:0}
+  .dolor:nth-child(even) .consecuencia{margin-left:clamp(0rem,8vw,3rem)}
+  .avatar{width:36px;height:36px}
+  .globo-vos{font-size:1.1rem}
+}
+
+/* ============================== CAPA 3D ============================== */
+/* Los lienzos son ornamento puro: ocultos por defecto, solo aparecen si WebGL confirma.
+   Con .webgl-off (o sin JS) la página queda completa con sus SVG originales. */
+canvas[id^="gl-"]{display:none;pointer-events:none}
+html.webgl-on{background:var(--bg)}
+html.webgl-on body{background:transparent}
+html.webgl-on #gl-grano{display:block;position:fixed;inset:0;width:100%;height:100%;z-index:-1}
+.visual-hero{position:relative;width:100%;max-width:480px;justify-self:end}
+.visual-hero .flujo{width:100%;max-width:none;justify-self:auto}
+html.webgl-on #gl-hero{display:block;width:100%;aspect-ratio:480/440}
+html.webgl-on .visual-hero .flujo{display:none}
+.orbita-wrap{position:relative;width:100%;max-width:600px;justify-self:center}
+.orbita-wrap .orbita{position:relative;z-index:1;width:100%;max-width:none;justify-self:auto}
+html.webgl-on #gl-ciclo{display:block;position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);width:118%;height:118%;z-index:0}
+.cruce>:not(canvas){position:relative;z-index:1}
+html.webgl-on #gl-nos{display:block;position:absolute;inset:0;width:100%;height:100%;z-index:0}
+@media (max-width:980px){
+  .visual-hero{max-width:430px;justify-self:start}
+  .orbita-wrap{max-width:520px}
+}
+@media (max-width:900px){html.webgl-on #gl-nos{display:none}}
+@media (max-width:600px){.orbita-wrap{display:none}}
+@media print{
+  canvas[id^="gl-"]{display:none !important}
+  html.webgl-on .visual-hero .flujo{display:block}
+}
+
+/* ============================== MOTION: NAVEGACIÓN ============================== */
+/* barra de progreso de lectura */
+.progreso{position:fixed;top:0;left:0;right:0;height:3px;z-index:60;pointer-events:none}
+.progreso i{
+  display:block;height:100%;background:var(--naranja);
+  transform:scaleX(var(--p,0));transform-origin:left center;
+}
+html:not(.js) .progreso{display:none}
+
+/* header que reacciona al scroll (solo transform/sombra: cero reflow) */
+header{transition:box-shadow .35s var(--e-quart),border-color .35s var(--e-quart)}
+header.compacto{box-shadow:0 8px 26px -20px rgba(36,42,61,.65);border-bottom-color:var(--line-2)}
+.barra{transition:transform .35s var(--e-quart)}
+header.compacto .barra{transform:translateY(-2px)}
+.logo{transform-origin:left center;transition:transform .35s var(--e-quart)}
+header.compacto .logo{transform:scale(.94)}
+
+/* indicador deslizante de sección activa */
+.navlinks{position:relative}
+.nav-ind{
+  position:absolute;left:0;bottom:-.62rem;height:2px;width:100px;
+  background:var(--naranja);border-radius:2px;
+  transform:translateX(var(--x,0)) scaleX(var(--s,0));
+  transform-origin:left center;opacity:var(--o,0);
+  transition:transform .5s var(--e-quint),opacity .3s var(--e-quart);
+  pointer-events:none;
+}
+.navlinks a.activo{color:var(--ink)}
+
+/* ============================== MOTION: FLECHAS ============================== */
+.flecha{display:inline-block;transition:transform .35s var(--exp)}
+.btn:hover .flecha,.nav-cta:hover .flecha,.btn:focus-visible .flecha,.nav-cta:focus-visible .flecha{transform:translateX(5px)}
+.btn:active{transform:translateY(-1px) scale(.98);transition-duration:.12s}
+.nav-cta:active{transform:translateY(0) scale(.98);transition-duration:.12s}
+
+/* la flecha de cada consecuencia se dibuja al entrar en viewport */
+html.flechas .consecuencia svg path{
+  stroke-dasharray:100;stroke-dashoffset:100;
+  transition:stroke-dashoffset .95s var(--e-quint) .3s;
+}
+html.flechas .dolor.in .consecuencia svg path{stroke-dashoffset:0}
+
+/* ============================== MOTION: DOLORES COMO CHAT ============================== */
+/* el reveal vive en los turnos, no en el bloque: la conversación se escribe sola */
+html.js .dolor.r{opacity:1;transform:none;filter:none;transition:none}
+html.js .dolor .turno,html.js .dolor .consecuencia{
+  opacity:.32;transform:translateY(14px);
+  transition:opacity .55s var(--e-quint),transform .55s var(--e-quint);
+  transition-delay:calc(var(--i,0) * 90ms);
+}
+html.js .dolor.in .turno,html.js .dolor.in .consecuencia{opacity:1;transform:none}
+
+/* ============================== MOTION: EL CICLO VIVO ============================== */
+/* cada estación pulsa cuando el punto orbital la cruza (16s / 6 = 2.667s) */
+.orbita .est,.orbita .rotulo,.orbita .vuelve{transform-box:fill-box;transform-origin:center}
+html.js .orbita .est{
+  animation:est-pulso 16s linear infinite;
+  animation-delay:calc(var(--k,0) * 2.6667s - 16s);
+}
+html.js .orbita .rotulo{
+  animation:est-rotulo 16s linear infinite;
+  animation-delay:calc(var(--k,0) * 2.6667s - 16s);
+}
+@keyframes est-pulso{
+  0%{transform:scale(1);stroke-width:2}
+  4%{transform:scale(1.17);stroke-width:3.4}
+  16%{transform:scale(1);stroke-width:2}
+  100%{transform:scale(1);stroke-width:2}
+}
+@keyframes est-rotulo{
+  0%{fill:var(--ink)}
+  4%{fill:var(--naranja-deep)}
+  20%{fill:var(--ink)}
+  100%{fill:var(--ink)}
+}
+/* estela del punto orbital */
+.orb-eco{fill:var(--naranja);opacity:.45;
+  offset-path:path('M330 100 A190 190 0 1 1 330 480 A190 190 0 1 1 330 100');
+  animation:orbitar 16s linear infinite;animation-delay:-15.9s}
+.orb-eco-2{opacity:.22;animation-delay:-15.78s}
+/* al cerrar la vuelta, el ícono del centro gira */
+html.js .orbita .vuelve{animation:dar-vuelta 16s var(--e-quint) infinite}
+@keyframes dar-vuelta{0%,84%{transform:rotate(0)}100%{transform:rotate(360deg)}}
+/* etapas en mobile: hover con peso */
+.ciclo-lista li{transition:transform .3s var(--e-quart)}
+.ciclo-lista li:hover{transform:translateX(4px)}
+
+/* ============================== MOTION: VIDA GENERAL ============================== */
+/* corrientes del río: más gotas, flujo continuo */
+.g2{animation-delay:-1.6s !important}
+.g3{animation-delay:-.55s !important}
+/* el switch celebra cuando se enciende */
+html.js .cierre-auto.in .switch{animation:switch-glow 1s var(--e-quart) .45s}
+@keyframes switch-glow{
+  0%{filter:drop-shadow(0 0 0 rgba(34,121,90,0))}
+  40%{filter:drop-shadow(0 0 9px rgba(34,121,90,.5))}
+  100%{filter:drop-shadow(0 0 0 rgba(34,121,90,0))}
+}
+/* diferenciales: cada uno responde */
+.franja b{transition:transform .2s var(--e-quart),color .2s var(--e-quart)}
+.franja b:hover{transform:translateY(-2px);color:var(--naranja-deep)}
+/* ramas y nudo: presencia al pasar */
+.nudo{transition:transform .45s var(--e-quint),box-shadow .45s var(--e-quint)}
+.cruce:hover .nudo{transform:scale(1.04);box-shadow:0 22px 46px -20px rgba(36,42,61,.6)}
+
+
+/* ============ EL CIERRE: la marca de fondo y la energía que converge ============ */
+.panel > :not(.panel-fx){position:relative;z-index:1}
+.panel-fx{position:absolute;inset:0;overflow:clip;pointer-events:none;border-radius:inherit}
+.panel-aura{position:absolute;border-radius:50%}
+.panel-aura.a1{width:74%;aspect-ratio:1;right:-14%;top:-32%;
+  background:radial-gradient(closest-side,rgba(224,118,59,.32),transparent 70%);
+  animation:auraA 24s ease-in-out infinite alternate}
+.panel-aura.a2{width:70%;aspect-ratio:1;left:-16%;bottom:-34%;
+  background:radial-gradient(closest-side,rgba(46,125,91,.30),transparent 70%);
+  animation:auraB 29s ease-in-out infinite alternate}
+@keyframes auraA{to{transform:translate(-60px,44px) scale(1.12)}}
+@keyframes auraB{to{transform:translate(70px,-34px) scale(1.09)}}
+/* el monograma, apenas insinuado */
+.panel-marca{position:absolute;left:50%;top:64%;transform:translate(-50%,-50%);
+  width:min(520px,70%);opacity:.045}
+/* los sistemas del cliente convergiendo en el botón */
+.panel-lineas{position:absolute;inset:0;width:100%;height:100%}
+.panel-lineas path{fill:none}
+.panel-lineas .base{stroke:rgba(255,255,255,.10);stroke-width:1}
+.panel-lineas .luz{stroke:rgba(255,255,255,.55);stroke-width:1.5;stroke-linecap:round;
+  stroke-dasharray:10 340;animation:converger 6s linear infinite}
+.panel-lineas .luz.n{stroke:rgba(238,148,88,.8)}
+@keyframes converger{from{stroke-dashoffset:350}to{stroke-dashoffset:0}}
+/* el botón respira */
+.panel .btn-primario{position:relative}
+.panel .btn-primario::after{content:"";position:absolute;inset:0;border-radius:999px;
+  pointer-events:none;animation:halo 3.6s var(--e-quart) infinite}
+@keyframes halo{
+  0%{box-shadow:0 0 0 0 rgba(224,118,59,.38)}
+  70%{box-shadow:0 0 0 13px rgba(224,118,59,0)}
+  100%{box-shadow:0 0 0 0 rgba(224,118,59,0)}
+}
+
+/* ============================== REDUCED MOTION ============================== */
+@media (prefers-reduced-motion: reduce){
+  .progreso{display:none}
+  .panel-lineas .luz{display:none}
+  .nav-ind{transition:none}
+  .orb-eco,.orb-eco-2{display:none}
+  html.flechas .consecuencia svg path{stroke-dashoffset:0;transition:none}
+  html.js .dolor .turno,html.js .dolor .consecuencia{opacity:1;transform:none;transition:none}
+  html{scroll-behavior:auto}
+  *,*::before,*::after{animation:none !important;transition:none !important}
+  html.js .r{opacity:1;transform:none;filter:none}
+  .blob{display:none}
+  .viaja,.gota,.orb-dot,.flujo .pulso{display:none}
+  .cursor{display:none}
+  .rotor.tecleando .subraya path{stroke-dashoffset:0}
+  html.js .switch .pista{fill:var(--verde)}
+  html.js .switch .perilla{transform:translateX(28px)}
+}
+</style>
+</head>
+<body>
+
+<canvas id="gl-grano" aria-hidden="true"></canvas>
+
+<div class="progreso" aria-hidden="true"><i></i></div>
+
+<header>
+  <div class="barra">
+    <a class="logo" href="#" aria-label="Delta 4C"><img src="/logo.png" alt="" width="55" height="32" decoding="async"></a>
+    <nav class="navlinks" aria-label="Secciones">
+      <span class="nav-ind" aria-hidden="true"></span>
+      <a href="#problema">El problema real</a>
+      <a href="#ciclo">Cómo trabajamos</a>
+      <a href="#nosotros">Por qué nosotros</a>
+    </nav>
+    <p class="idioma"><span class="actual" aria-current="true">ES</span><span class="sep" aria-hidden="true">/</span><a href="/en" hreflang="en" lang="en">EN</a></p>
+    <a class="nav-cta" href="https://calendly.com/nicolasbaseggiodev/30min" target="_blank" rel="noopener">Agendá una charla <span class="flecha" aria-hidden="true">→</span></a>
+  </div>
+</header>
+
+<main>
+
+<!-- ============================== HERO ============================== -->
+<section class="hero" aria-label="Delta 4C">
+  <div class="blob b1"></div><div class="blob b2"></div><div class="blob b3"></div>
+  <div class="marco">
+    <div>
+      <p class="cap r"><svg width="22" height="10" viewBox="0 0 22 10" fill="none" aria-hidden="true"><path d="M1 7c3-5 5-5 8 0s5 5 8 0" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"/></svg>Lo que hacemos</p>
+      <h1 class="r" style="--d:.06s">
+        Hacemos que tus sistemas trabajen juntos, <em class="vos">para vos</em>.
+        <span class="l2">No
+          <span class="rotor"><span class="sr">rompemos</span><span class="pila" aria-hidden="true"><span class="rotor-w">rompemos</span><span class="rotor-w">migramos</span><span class="rotor-w">cambiamos</span><span class="rotor-viva"><span class="txt">rompemos</span><i class="cursor"></i></span></span><svg class="subraya" viewBox="0 0 120 12" preserveAspectRatio="none" aria-hidden="true"><path pathLength="100" d="M4 8.5 C 34 4.5, 70 10.5, 116 6"/></svg></span>
+          lo que ya anda</span>
+      </h1>
+      <p class="lead r" style="--d:.12s">Nos conectamos a los sistemas que ya usás, leemos tus datos sin tocar lo que factura, y construimos arriba lo que te falta: desde responder tus preguntas hasta operar tu día a día.</p>
+      <ul class="chips r" style="--d:.18s">
+        <li><i class="dot d-azul"></i>Sobre tus sistemas</li>
+        <li><i class="dot d-verde"></i>Leemos y construimos arriba</li>
+        <li><i class="dot d-naranja"></i>Diseñamos, evaluamos, ejecutamos</li>
+      </ul>
+    </div>
+    <div class="visual-hero r" style="--d:.2s">
+    <canvas id="gl-hero" aria-hidden="true"></canvas>
+    <svg class="flujo sombra" viewBox="0 0 480 440" fill="none" aria-hidden="true">
+      <!-- cables -->
+      <path class="cable" d="M100 68 C 190 68, 252 138, 334 194"/>
+      <path class="cable" d="M80 218 C 170 218, 250 220, 334 220"/>
+      <path class="cable" d="M100 368 C 190 368, 252 302, 334 246"/>
+      <!-- sistemas de origen -->
+      <g>
+        <rect class="caja" x="36" y="36" width="64" height="64" rx="18"/>
+        <path class="glifo" d="M55 84v-14M68 84V58M81 84V70"/>
+      </g>
+      <g>
+        <rect class="caja" x="16" y="186" width="64" height="64" rx="18"/>
+        <g class="glifo-fill">
+          <circle cx="34" cy="204" r="3.4"/><circle cx="48" cy="204" r="3.4"/><circle cx="62" cy="204" r="3.4"/>
+          <circle cx="34" cy="218" r="3.4"/><circle cx="48" cy="218" r="3.4"/><circle cx="62" cy="218" r="3.4"/>
+          <circle cx="34" cy="232" r="3.4"/><circle cx="48" cy="232" r="3.4"/><circle cx="62" cy="232" r="3.4"/>
+        </g>
+      </g>
+      <g>
+        <rect class="caja" x="36" y="336" width="64" height="64" rx="18"/>
+        <path class="glifo" d="M50 354h36M50 368h26M50 382h32"/>
+      </g>
+      <!-- nodo delta -->
+      <g class="nodo-delta">
+        <circle class="pulso" cx="392" cy="220" r="82"/>
+        <rect x="336" y="164" width="112" height="112" rx="28"/>
+        <image class="marca-nodo" href="/logo.png" x="352" y="198" width="80" height="47"/>
+        <circle class="apice" cx="392" cy="182" r="5.5"/>
+      </g>
+      <!-- puntos que viajan -->
+      <circle class="viaja v1" r="4.6"/>
+      <circle class="viaja v2" r="4.6"/>
+      <circle class="viaja v3" r="4.6"/>
+    </svg>
+    </div>
+  </div>
+</section>
+
+<!-- ============================== 01 EL PROBLEMA ============================== -->
+<section id="problema">
+  <div class="marco">
+    <svg class="sueltos" width="190" height="110" viewBox="0 0 190 110" aria-hidden="true">
+      <rect class="mini" x="8" y="10" width="34" height="34" rx="10"/>
+      <rect class="mini" x="140" y="2" width="34" height="34" rx="10"/>
+      <rect class="mini" x="84" y="66" width="34" height="34" rx="10"/>
+      <path class="tramo" d="M46 30 C 70 30, 96 22, 118 18"/>
+      <path class="tramo" d="M60 66 C 70 56, 76 50, 84 42"/>
+      <path class="tramo" d="M124 78 C 140 70, 148 56, 152 44"/>
+    </svg>
+    <p class="cap r"><svg width="22" height="10" viewBox="0 0 22 10" fill="none" aria-hidden="true"><path d="M1 7c3-5 5-5 8 0s5 5 8 0" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"/></svg>El problema real</p>
+    <h2 class="r" style="--d:.05s">Tus datos ya existen. Repartidos en sistemas que no se hablan, sin un lugar donde ver el negocio entero.</h2>
+    <p class="lead r" style="--d:.1s">Tu empresa no tiene un problema de datos: tiene un problema de <strong>coordinación, visibilidad y ejecución</strong>. Las ventas en un sistema, el stock en otro, las cobranzas en una planilla. Software enlatado que no toma tus procesos reales — y la operación termina viviendo en la cabeza de la gente.</p>
+  </div>
+</section>
+
+<!-- ============================== 02 LOS DOLORES ============================== -->
+<section id="dolores">
+  <div class="marco">
+    <div class="encabezado">
+      <p class="cap r"><svg width="22" height="10" viewBox="0 0 22 10" fill="none" aria-hidden="true"><path d="M1 7c3-5 5-5 8 0s5 5 8 0" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"/></svg>Lo que vivís todos los días</p>
+      <h2 class="r" style="--d:.05s">Todo esto ya está en tus datos. Nadie te lo está mostrando.</h2>
+      <p class="lead r" style="--d:.1s">No es falta de información: es que la información no sale del sistema cuando la necesitás.</p>
+    </div>
+
+    <div class="charla">
+      <article class="dolor r">
+        <div class="turno vos">
+          <span class="avatar" aria-hidden="true"><svg width="20" height="20" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="8.2" r="4" stroke="currentColor" stroke-width="2"/><path d="M4.5 20c1.6-3.4 4.3-5 7.5-5s5.9 1.6 7.5 5" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg></span>
+          <p class="globo globo-vos">No sé cuánto stock tengo parado.</p>
+        </div>
+        <p class="consecuencia"><svg width="14" height="14" viewBox="0 0 14 14" fill="none" aria-hidden="true"><path d="M3 2v6a3 3 0 0 0 3 3h5m0 0-3-3m3 3-3 3" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>Plata dormida en mercadería que no rota.</p>
+        <div class="turno delta">
+          <p class="globo globo-delta"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M4 20V9M10 20V4M16 20v-8M22 20H2" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"/></svg>El tablero lo muestra solo.</p>
+          <span class="avatar avatar-delta" aria-hidden="true"><svg width="18" height="18" viewBox="0 0 24 24" fill="none"><path d="M12 5.5 19 18H5Z" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/><circle cx="12" cy="5.5" r="1.8" fill="#e0763b" stroke="none"/></svg></span>
+        </div>
+      </article>
+
+      <article class="dolor r">
+        <div class="turno vos">
+          <span class="avatar" aria-hidden="true"><svg width="20" height="20" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="8.2" r="4" stroke="currentColor" stroke-width="2"/><path d="M4.5 20c1.6-3.4 4.3-5 7.5-5s5.9 1.6 7.5 5" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg></span>
+          <p class="globo globo-vos">¿Quién me debe, y hace cuánto?</p>
+        </div>
+        <p class="consecuencia"><svg width="14" height="14" viewBox="0 0 14 14" fill="none" aria-hidden="true"><path d="M3 2v6a3 3 0 0 0 3 3h5m0 0-3-3m3 3-3 3" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>Te enterás cuando ya es tarde.</p>
+        <div class="turno delta">
+          <p class="globo globo-delta"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M18 10a6 6 0 1 0-12 0c0 5-2 6-2 6h16s-2-1-2-6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><path d="M10.3 20a2 2 0 0 0 3.4 0" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>El sistema te avisa antes.</p>
+          <span class="avatar avatar-delta" aria-hidden="true"><svg width="18" height="18" viewBox="0 0 24 24" fill="none"><path d="M12 5.5 19 18H5Z" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/><circle cx="12" cy="5.5" r="1.8" fill="#e0763b" stroke="none"/></svg></span>
+        </div>
+      </article>
+
+      <article class="dolor r">
+        <div class="turno vos">
+          <span class="avatar" aria-hidden="true"><svg width="20" height="20" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="8.2" r="4" stroke="currentColor" stroke-width="2"/><path d="M4.5 20c1.6-3.4 4.3-5 7.5-5s5.9 1.6 7.5 5" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg></span>
+          <p class="globo globo-vos">Necesito un número y lo tengo que pedir.</p>
+        </div>
+        <p class="consecuencia"><svg width="14" height="14" viewBox="0 0 14 14" fill="none" aria-hidden="true"><path d="M3 2v6a3 3 0 0 0 3 3h5m0 0-3-3m3 3-3 3" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>Días de espera por algo que ya está en tu base.</p>
+        <div class="turno delta">
+          <p class="globo globo-delta"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M21 11.5a8.4 8.4 0 0 1-9 8.4 8.9 8.9 0 0 1-3.8-.8L3 20l1-4.9a8.4 8.4 0 1 1 17-3.6Z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>Se lo preguntás al asistente: responde en segundos.</p>
+          <span class="avatar avatar-delta" aria-hidden="true"><svg width="18" height="18" viewBox="0 0 24 24" fill="none"><path d="M12 5.5 19 18H5Z" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/><circle cx="12" cy="5.5" r="1.8" fill="#e0763b" stroke="none"/></svg></span>
+        </div>
+      </article>
+
+      <article class="dolor r">
+        <div class="turno vos">
+          <span class="avatar" aria-hidden="true"><svg width="20" height="20" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="8.2" r="4" stroke="currentColor" stroke-width="2"/><path d="M4.5 20c1.6-3.4 4.3-5 7.5-5s5.9 1.6 7.5 5" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg></span>
+          <p class="globo globo-vos">Un buen cliente dejó de comprar.</p>
+        </div>
+        <p class="consecuencia"><svg width="14" height="14" viewBox="0 0 14 14" fill="none" aria-hidden="true"><path d="M3 2v6a3 3 0 0 0 3 3h5m0 0-3-3m3 3-3 3" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>Y nadie te avisó a tiempo.</p>
+        <div class="turno delta">
+          <p class="globo globo-delta"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" aria-hidden="true"><rect x="7" y="2.5" width="10" height="19" rx="2.5" stroke="currentColor" stroke-width="2"/><path d="M11 18.4h2" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>Una alerta a tu teléfono, a tiempo.</p>
+          <span class="avatar avatar-delta" aria-hidden="true"><svg width="18" height="18" viewBox="0 0 24 24" fill="none"><path d="M12 5.5 19 18H5Z" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/><circle cx="12" cy="5.5" r="1.8" fill="#e0763b" stroke="none"/></svg></span>
+        </div>
+      </article>
+
+      <article class="dolor r">
+        <div class="turno vos">
+          <span class="avatar" aria-hidden="true"><svg width="20" height="20" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="8.2" r="4" stroke="currentColor" stroke-width="2"/><path d="M4.5 20c1.6-3.4 4.3-5 7.5-5s5.9 1.6 7.5 5" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg></span>
+          <p class="globo globo-vos">Decido de memoria.</p>
+        </div>
+        <p class="consecuencia"><svg width="14" height="14" viewBox="0 0 14 14" fill="none" aria-hidden="true"><path d="M3 2v6a3 3 0 0 0 3 3h5m0 0-3-3m3 3-3 3" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>Porque el dato no está a mano.</p>
+        <div class="turno delta">
+          <p class="globo globo-delta"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" aria-hidden="true"><rect x="2.5" y="4" width="19" height="13" rx="2.5" stroke="currentColor" stroke-width="2"/><path d="M8.5 20.5h7" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>El negocio entero en una sola pantalla.</p>
+          <span class="avatar avatar-delta" aria-hidden="true"><svg width="18" height="18" viewBox="0 0 24 24" fill="none"><path d="M12 5.5 19 18H5Z" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/><circle cx="12" cy="5.5" r="1.8" fill="#e0763b" stroke="none"/></svg></span>
+        </div>
+      </article>
+    </div>
+
+    <p class="cierre r">Ninguno se arregla cambiando tus sistemas. Se arreglan haciéndolos hablar entre ellos — y viéndolos juntos, en un solo lugar.</p>
+  </div>
+</section>
+
+<!-- ============================== 03 EL CICLO ============================== -->
+<section id="ciclo">
+  <div class="marco">
+    <div class="duo">
+      <div>
+        <p class="cap r"><svg width="22" height="10" viewBox="0 0 22 10" fill="none" aria-hidden="true"><path d="M1 7c3-5 5-5 8 0s5 5 8 0" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"/></svg>Cómo trabajamos</p>
+        <h2 class="r" style="--d:.05s">Un solo responsable del camino entero.</h2>
+
+        <ol class="ciclo-lista r" style="--d:.1s">
+          <li><span class="n">1</span>Radiografía</li>
+          <li><span class="n">2</span>Conexión</li>
+          <li><span class="n">3</span>Construcción</li>
+          <li><span class="n">4</span>Verificación</li>
+          <li><span class="n">5</span>Vigilancia</li>
+          <li><span class="n">6</span>Mejora</li>
+        </ol>
+        <p class="ciclo-vuelve"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M20 12a8 8 0 1 1-2.4-5.7M20 3v4h-4" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg>y el ciclo vuelve a empezar</p>
+      </div>
+
+      <div class="orbita-wrap r" style="--d:.1s">
+      <canvas id="gl-ciclo" aria-hidden="true"></canvas>
+      <svg class="orbita" viewBox="0 0 660 600" fill="none" aria-hidden="true" id="orbitaSvg">
+        <g id="giro">
+          <circle class="aro" cx="330" cy="290" r="190"/>
+          <path class="tic" d="M330 96v8" transform="rotate(140 330 290)"/>
+          <path class="tic tic-v" d="M330 96v8" transform="rotate(255 330 290)"/>
+        </g>
+        <circle class="orb-eco orb-eco-2" r="3.4"/>
+        <circle class="orb-eco" r="4.2"/>
+        <circle class="orb-dot" r="5"/>
+        <!-- estaciones -->
+        <g class="sombra">
+          <circle class="est est-n" cx="330" cy="100" r="23" style="--k:0"/>
+          <circle class="est" cx="494.5" cy="195" r="23" style="--k:1"/>
+          <circle class="est" cx="494.5" cy="385" r="23" style="--k:2"/>
+          <circle class="est est-v" cx="330" cy="480" r="23" style="--k:3"/>
+          <circle class="est est-v" cx="165.5" cy="385" r="23" style="--k:4"/>
+          <circle class="est" cx="165.5" cy="195" r="23" style="--k:5"/>
+        </g>
+        <text class="num" x="330" y="106" text-anchor="middle">1</text>
+        <text class="num" x="494.5" y="201" text-anchor="middle">2</text>
+        <text class="num" x="494.5" y="391" text-anchor="middle">3</text>
+        <text class="num" x="330" y="486" text-anchor="middle">4</text>
+        <text class="num" x="165.5" y="391" text-anchor="middle">5</text>
+        <text class="num" x="165.5" y="201" text-anchor="middle">6</text>
+        <text class="rotulo" x="330" y="58" text-anchor="middle" style="--k:0">Radiografía</text>
+        <text class="rotulo" x="528" y="201" style="--k:1">Conexión</text>
+        <text class="rotulo" x="528" y="391" style="--k:2">Construcción</text>
+        <text class="rotulo" x="330" y="540" text-anchor="middle" style="--k:3">Verificación</text>
+        <text class="rotulo" x="132" y="391" text-anchor="end" style="--k:4">Vigilancia</text>
+        <text class="rotulo" x="132" y="201" text-anchor="end" style="--k:5">Mejora</text>
+        <!-- centro -->
+        <path class="vuelve" d="M348 252a19 19 0 1 1-5.6-13.4M348 231v9h-9"/>
+        <text class="centro-t" x="330" y="298" text-anchor="middle">y el ciclo</text>
+        <text class="centro-t" x="330" y="320" text-anchor="middle">vuelve a empezar</text>
+      </svg>
+      </div>
+    </div>
+
+    <p class="cierre r">De sistemas que no se hablan a procesos eficientes que generan valor.</p>
+  </div>
+</section>
+
+<!-- ============================== 04 QUÉ AUTOMATIZAMOS ============================== -->
+<section id="automatizamos">
+  <div class="marco">
+    <p class="cap r"><svg width="22" height="10" viewBox="0 0 22 10" fill="none" aria-hidden="true"><path d="M1 7c3-5 5-5 8 0s5 5 8 0" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"/></svg>Primero el proceso, después la tecnología</p>
+    <h2 class="r" style="--d:.05s">No todo se automatiza. Cada paso va a la herramienta correcta.</h2>
+    <p class="lead r" style="--d:.1s">Primero tu flujo y tus procesos; después la tecnología. Automatizamos donde hay retorno: si un paso no devuelve más de lo que cuesta, no se toca.</p>
+
+    <div class="rio r" style="--d:.12s">
+      <div class="fuente-wrap"><span class="fuente">un paso del trabajo relevado</span></div>
+      <svg class="corrientes" viewBox="0 0 1000 200" fill="none" aria-hidden="true">
+        <path class="agua" d="M500 10 C 500 100, 170 78, 170 168"/>
+        <path class="agua" d="M500 10 C 500 70, 500 110, 500 168"/>
+        <path class="agua" d="M500 10 C 500 100, 830 78, 830 168"/>
+        <circle class="boca" cx="500" cy="10" r="6"/>
+        <circle class="boca" cx="170" cy="168" r="6"/>
+        <circle class="boca" cx="500" cy="168" r="6"/>
+        <circle class="boca" cx="830" cy="168" r="6"/>
+        <circle class="gota g-cod" r="4.6"/>
+        <circle class="gota g-mod" r="4.6"/>
+        <circle class="gota g-hum" r="4.6"/>
+        <circle class="gota g-cod g2" r="3.4"/>
+        <circle class="gota g-mod g3" r="3.4"/>
+        <circle class="gota g-hum g2" r="3.4"/>
+      </svg>
+      <div class="ramas">
+        <div class="rama r" style="--d:.05s">
+          <span class="tag t-cod">[código]</span>
+          <h3>Software a medida</h3>
+          <p>Cuando las reglas son claras y se repiten. Acá viven los números y las tareas que hoy te comen horas.</p>
+        </div>
+        <div class="rama r" style="--d:.15s">
+          <span class="tag t-mod">[modelo]</span>
+          <h3>Un agente</h3>
+          <p>Cuando hay que mirar varias fuentes, decidir el próximo paso y ejecutarlo. Coordina, evalúa y ejecuta: como alguien de tu equipo que nunca se olvida de nada.</p>
+        </div>
+        <div class="rama r" style="--d:.25s">
+          <span class="tag t-hum">[humano]</span>
+          <h3>Un humano en control</h3>
+          <p>Cuando la decisión tiene ambigüedad, responsabilidad o consecuencias que no se deshacen.</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="cierre-auto r">
+      <svg class="switch" width="62" height="34" viewBox="0 0 62 34" aria-hidden="true">
+        <rect class="pista" x="1" y="1" width="60" height="32" rx="16"/>
+        <circle class="perilla" cx="17" cy="17" r="12"/>
+      </svg>
+      <p>La autonomía se gana, no se toma: todo corre primero en modo revisión, y recién cuando demuestra que acierta, se enciende solo. La confianza no se automatiza.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ============================== 05 POR QUÉ NOSOTROS ============================== -->
+<section id="nosotros">
+  <div class="marco">
+    <p class="cap r"><svg width="22" height="10" viewBox="0 0 22 10" fill="none" aria-hidden="true"><path d="M1 7c3-5 5-5 8 0s5 5 8 0" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"/></svg>Por qué nosotros</p>
+    <h2 class="r" style="--d:.05s">El trabajo pide dos criterios que rara vez viven en la misma persona.</h2>
+
+    <div class="cruce r" style="--d:.08s">
+      <canvas id="gl-nos" aria-hidden="true"></canvas>
+      <div class="mundo mundo-com">
+        <h3>El mundo comercial</h3>
+        <ul>
+          <li>procesos</li>
+          <li>dónde se gana y se pierde</li>
+          <li>riesgo y adopción</li>
+          <li>valor del negocio</li>
+        </ul>
+      </div>
+      <div class="medio" aria-hidden="false">
+        <span class="hilo" aria-hidden="true"></span>
+        <span class="nudo"><img src="/logo.png" alt="" width="64" height="37" decoding="async"><span class="sr">nosotros</span></span>
+        <span class="hilo" aria-hidden="true"></span>
+      </div>
+      <div class="mundo mundo-tec">
+        <h3>El mundo técnico</h3>
+        <ul>
+          <li>los datos y los sistemas</li>
+          <li>el código y las reglas</li>
+          <li>la confiabilidad</li>
+          <li>no inventar un número</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="franja r">
+      <b>A medida, no enlatado</b><span class="sep" aria-hidden="true">·</span>
+      <b>En semanas, no en años</b><span class="sep" aria-hidden="true">·</span>
+      <b>Atención directa del que lo construye</b><span class="sep" aria-hidden="true">·</span>
+      <b>En tu empresa, capacitando a tu equipo</b>
+    </div>
+
+    <p class="cierre r">Convertimos entender tu negocio en software que anda: más productividad hoy, listo para escalar mañana.</p>
+  </div>
+</section>
+
+<!-- ============================== 06 CTA ============================== -->
+<section id="cta">
+  <div class="marco">
+    <div class="panel">
+      <div class="panel-fx" aria-hidden="true"><i class="panel-aura a1"></i><i class="panel-aura a2"></i><img class="panel-marca" src="/logo-blanco.png" alt="" decoding="async"><svg class="panel-lineas" viewBox="0 0 1000 520" preserveAspectRatio="none"><path class="base" d="M0,52 C 210,84 350,236 500,400"/><path class="base" d="M1000,34 C 790,74 656,224 500,400"/><path class="base" d="M0,246 C 190,286 350,338 500,400"/><path class="base" d="M1000,262 C 812,300 656,346 500,400"/><path class="base" d="M104,520 C 250,472 380,432 500,400"/><path class="base" d="M902,520 C 756,470 626,430 500,400"/><path class="luz" d="M0,52 C 210,84 350,236 500,400" style="animation-delay:0s"/><path class="luz n" d="M1000,34 C 790,74 656,224 500,400" style="animation-delay:1s"/><path class="luz" d="M0,246 C 190,286 350,338 500,400" style="animation-delay:2s"/><path class="luz" d="M1000,262 C 812,300 656,346 500,400" style="animation-delay:3s"/><path class="luz n" d="M104,520 C 250,472 380,432 500,400" style="animation-delay:4s"/><path class="luz" d="M902,520 C 756,470 626,430 500,400" style="animation-delay:5s"/></svg></div>
+      <p class="cap"><svg width="22" height="10" viewBox="0 0 22 10" fill="none" aria-hidden="true"><path d="M1 7c3-5 5-5 8 0s5 5 8 0" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"/></svg>El siguiente paso</p>
+      <h2>Empecemos por la radiografía de tu negocio.</h2>
+      <p class="lead">Relevamos tu operación y te mostramos, con tus propios números, cómo están trabajando tus procesos y dónde hay lugar para mejorar. Sin tocar lo que ya anda. Si hay algo para construir, lo ves antes de decidir.</p>
+      <div class="botones">
+        <a class="btn btn-primario" href="https://calendly.com/nicolasbaseggiodev/30min" target="_blank" rel="noopener">Agendá una charla <span class="flecha" aria-hidden="true">→</span></a>
+      </div>
+    </div>
+  </div>
+</section>
+
+</main>
+
+<footer>
+  <div class="marco">
+    <p class="linea"><span class="marca-f">DELTA<span class="punto">·</span>4C</span> · leemos tus datos sin tocar lo que factura · construimos arriba lo que te falta</p>
+    <p class="remate">Tu negocio, más eficiente cada mes.</p>
+  </div>
+</footer>
+
+<script>
+(function(){
+  var rm = window.matchMedia('(prefers-reduced-motion: reduce)');
+
+  /* --- reveals: siempre desde estado legible, nunca opacity 0 --- */
+  var todos = [].slice.call(document.querySelectorAll('.r'));
+  if (rm.matches || !('IntersectionObserver' in window)) {
+    todos.forEach(function(el){ el.classList.add('in'); });
+  } else {
+    var io = new IntersectionObserver(function(entradas){
+      entradas.forEach(function(e){
+        if (e.isIntersecting) { e.target.classList.add('in'); io.unobserve(e.target); }
+      });
+    }, { threshold: .12, rootMargin: '0px 0px -6% 0px' });
+    todos.forEach(function(el){ io.observe(el); });
+    /* red de seguridad: si el observer nunca reporta (pestaña de fondo, render sin
+       compositor), nada puede quedar a media luz */
+    setTimeout(function(){
+      todos.forEach(function(el){
+        var r = el.getBoundingClientRect();
+        if (r.top < innerHeight * 1.1) el.classList.add('in');
+      });
+    }, 2200);
+  }
+
+  /* --- los dolores se escriben como una conversación: turno por turno --- */
+  [].forEach.call(document.querySelectorAll('.dolor'), function(d){
+    var partes = d.querySelectorAll('.turno, .consecuencia');
+    [].forEach.call(partes, function(p, i){ p.style.setProperty('--i', i); });
+  });
+
+  /* --- las flechas de cada consecuencia se dibujan solas --- */
+  var flechas = document.querySelectorAll('.consecuencia svg path');
+  if (flechas.length) {
+    [].forEach.call(flechas, function(p){ p.setAttribute('pathLength', '100'); });
+    document.documentElement.classList.add('flechas');
+  }
+
+  /* --- barra de progreso + header que se asienta ---
+     el alto del documento se mide una vez y en cada resize: leerlo por scroll
+     obligaría a recalcular layout en cada frame */
+  var barra = document.querySelector('.progreso i');
+  var cab = document.querySelector('header');
+  var recorrido = 0;
+  function medir(){
+    var h = document.documentElement;
+    recorrido = h.scrollHeight - h.clientHeight;
+  }
+  function alScrollear(){
+    var y = pageYOffset || document.documentElement.scrollTop || 0;
+    if (barra && recorrido > 0) {
+      barra.style.setProperty('--p', Math.min(1, Math.max(0, y / recorrido)).toFixed(4));
+    }
+    if (cab) cab.classList.toggle('compacto', y > 24);
+  }
+  medir(); alScrollear();
+  addEventListener('scroll', alScrollear, { passive: true });
+  addEventListener('resize', function(){ medir(); alScrollear(); }, { passive: true });
+  addEventListener('load', function(){ medir(); alScrollear(); });
+
+  /* --- sección activa: el indicador se desliza de link a link --- */
+  var links = [].slice.call(document.querySelectorAll('.navlinks a'));
+  var ind = document.querySelector('.nav-ind');
+  if (links.length && ind) {
+    var porId = {};
+    links.forEach(function(a){ porId[a.getAttribute('href').slice(1)] = a; });
+    var activo = null;
+    function marcar(a){
+      if (a === activo) return;
+      activo = a;
+      links.forEach(function(l){ l.classList.toggle('activo', l === a); });
+      if (!a) { ind.style.setProperty('--o', 0); return; }
+      ind.style.setProperty('--x', a.offsetLeft + 'px');
+      ind.style.setProperty('--s', (a.offsetWidth / 100).toFixed(4));
+      ind.style.setProperty('--o', 1);
+    }
+    var seccs = Object.keys(porId).map(function(id){ return document.getElementById(id); }).filter(Boolean);
+    if ('IntersectionObserver' in window) {
+      var vistas = {};
+      var ioNav = new IntersectionObserver(function(es){
+        es.forEach(function(e){ vistas[e.target.id] = e.isIntersecting; });
+        var enPantalla = seccs.filter(function(s){ return vistas[s.id]; });
+        marcar(enPantalla.length ? porId[enPantalla[0].id] : null);
+      }, { rootMargin: '-45% 0px -45% 0px', threshold: 0 });
+      seccs.forEach(function(s){ ioNav.observe(s); });
+    }
+    addEventListener('resize', function(){
+      if (activo) {
+        ind.style.setProperty('--x', activo.offsetLeft + 'px');
+        ind.style.setProperty('--s', (activo.offsetWidth / 100).toFixed(4));
+      }
+    }, { passive: true });
+  }
+
+  /* --- el titular se escribe solo: rompemos → migramos → cambiamos ---
+     Nunca hay dos palabras a la vez: una se borra, la siguiente se teclea. */
+  (function(){
+    var rotor = document.querySelector('.rotor');
+    var txt   = rotor && rotor.querySelector('.rotor-viva .txt');
+    if (!rotor || !txt) return;
+    var palabras = ['rompemos','migramos','cambiamos'];
+    txt.textContent = palabras[0];
+
+    /* con movimiento reducido igual rota: los tres verbos SON el mensaje.
+       Cambia la palabra entera de golpe, sin tipeo ni cursor. */
+    if (rm.matches) {
+      var k = 0;
+      setInterval(function(){
+        k = (k + 1) % palabras.length;
+        txt.textContent = palabras[k];
+      }, 2800);
+      return;
+    }
+
+    var i = 0, n = palabras[0].length, borrando = false;
+    function paso(){
+      var p = palabras[i];
+      if (borrando) {
+        n--; txt.textContent = p.slice(0, n);
+        if (n <= 0) { borrando = false; i = (i + 1) % palabras.length; return setTimeout(paso, 230); }
+        return setTimeout(paso, 42);
+      }
+      n++; txt.textContent = p.slice(0, n);
+      if (n >= p.length) {
+        rotor.classList.remove('tecleando');   /* palabra completa: se traza el subrayado */
+        return setTimeout(function(){
+          rotor.classList.add('tecleando'); borrando = true; paso();
+        }, 2200);
+      }
+      return setTimeout(paso, 76);
+    }
+    setTimeout(function(){
+      rotor.classList.add('tecleando'); borrando = true; paso();
+    }, 2600);
+  })();
+
+  /* --- la órbita gira suave con el scroll --- */
+  var giro = document.getElementById('giro');
+  var orb = document.getElementById('orbitaSvg');
+  if (giro && orb && !rm.matches) {
+    var tick = false;
+    var girar = function(){
+      tick = false;
+      var r = orb.getBoundingClientRect();
+      if (r.bottom < -100 || r.top > innerHeight + 100) return;
+      var p = (innerHeight - r.top) / (innerHeight + r.height);
+      giro.setAttribute('transform', 'rotate(' + (p * 90).toFixed(2) + ' 330 290)');
+    };
+    addEventListener('scroll', function(){
+      if (!tick) { tick = true; requestAnimationFrame(girar); }
+    }, { passive: true });
+    girar();
+  }
+})();
+</script>
+
+<!-- ============================== ESCENAS 3D (three.js) ============================== -->
+<script type="module">
+let THREE;
+try{ THREE=await import('./three.module.min.js'); }
+catch(e){ try{ THREE=await import('https://unpkg.com/three@0.160.0/build/three.module.js'); }catch(e2){} }
+if(!THREE){ document.documentElement.classList.add('webgl-off'); }
+else (function(){
+  var rm = window.matchMedia('(prefers-reduced-motion: reduce)');
+  if (rm.matches){ document.documentElement.classList.add('webgl-off'); return; }
+
+  /* paleta: tinta azul-noche sobre blanco; la niebla blanca hace el depth cueing */
+  var C = {
+    ink:0x242a3d, ink2:0x4c556e, bruma:0x8d94ad, brumaClara:0x99a2ba,
+    naranja:0xe0763b, verde:0x22795a, blanco:0xffffff
+  };
+
+  var escenas = [];
+  var porCanvas = new Map();
+
+  function crearRenderer(canvas){
+    var r = new THREE.WebGLRenderer({canvas:canvas, alpha:true, antialias:true});
+    r.setPixelRatio(Math.min(devicePixelRatio, 1.8));
+    return r;
+  }
+  function registrar(canvas, escena, camara, renderer, update, siempreVisible){
+    var s = {canvas:canvas, scene:escena, camera:camara, renderer:renderer,
+             update:update, visible:!!siempreVisible, fija:!!siempreVisible, w:0, h:0};
+    escenas.push(s); porCanvas.set(canvas, s);
+    return s;
+  }
+  function medir(s){
+    var w = s.canvas.clientWidth, h = s.canvas.clientHeight;
+    if (!w || !h || (w===s.w && h===s.h)) return;
+    s.w=w; s.h=h;
+    s.renderer.setSize(w, h, false);
+    s.camera.aspect = w/h; s.camera.updateProjectionMatrix();
+  }
+
+  /* helpers de wireframe fino */
+  function aristas(geo, color, opacidad){
+    return new THREE.LineSegments(
+      new THREE.EdgesGeometry(geo),
+      new THREE.LineBasicMaterial({color:color, transparent:true, opacity:opacidad}));
+  }
+  function aro(radio, seg, color, opacidad){
+    var pts=[]; for(var i=0;i<seg;i++){ var a=i/seg*Math.PI*2;
+      pts.push(new THREE.Vector3(Math.cos(a)*radio, Math.sin(a)*radio, 0)); }
+    return new THREE.LineLoop(
+      new THREE.BufferGeometry().setFromPoints(pts),
+      new THREE.LineBasicMaterial({color:color, transparent:true, opacity:opacidad}));
+  }
+
+  /* puntero global: parallax sutil, solo pointer fino */
+  var punt = {x:0, y:0};
+  if (window.matchMedia('(pointer:fine)').matches){
+    addEventListener('pointermove', function(e){
+      punt.x = (e.clientX/innerWidth)*2 - 1;
+      punt.y = (e.clientY/innerHeight)*2 - 1;
+    }, {passive:true});
+  }
+
+  try{
+    document.documentElement.classList.add('webgl-on');
+
+    /* ============ HERO: red de nodos hacia el núcleo Δ ============ */
+    (function(){
+      var canvas = document.getElementById('gl-hero'); if(!canvas) return;
+      var renderer = crearRenderer(canvas);
+      var scene = new THREE.Scene();
+      scene.fog = new THREE.Fog(C.blanco, 9.0, 16.5);
+      var camera = new THREE.PerspectiveCamera(36, 480/440, .1, 60);
+      camera.position.set(0, 0, 10.6);
+
+      var mundo = new THREE.Group(); scene.add(mundo);
+
+      /* núcleo Δ: octaedro de tinta con ápice naranja, casco exterior tenue */
+      var nucleo = new THREE.Group(); nucleo.position.set(1.85, -.05, 0); mundo.add(nucleo);
+      var octa = aristas(new THREE.OctahedronGeometry(1.02), C.ink, .95); nucleo.add(octa);
+      var casco = aristas(new THREE.IcosahedronGeometry(1.52, 0), C.bruma, .34); nucleo.add(casco);
+      var apice = new THREE.Mesh(
+        new THREE.SphereGeometry(.08, 16, 12),
+        new THREE.MeshBasicMaterial({color:C.naranja}));
+      apice.position.set(0, 1.02, 0); nucleo.add(apice);
+
+      /* sistemas del cliente: cajas e icosaedros de wireframe */
+      var defsNodos = [
+        {p:[-2.75, 1.35,  .35], geo:new THREE.BoxGeometry(.52,.52,.52),      giro:.32, ctrl:[ .1,  .75,  .4]},
+        {p:[-3.15, -.05,-1.15], geo:new THREE.IcosahedronGeometry(.36,0),    giro:.26, ctrl:[  0,  .18, 1.05]},
+        {p:[-2.5, -1.4,   .5], geo:new THREE.BoxGeometry(.48,.48,.48),      giro:.2,  ctrl:[ .1, -.75,  .4]}
+      ];
+      var defsMenores = [
+        {p:[-1.35, 2.05, -1.9], s:.17, ctrl:[ .2,  .6, -.5]},
+        {p:[ -.7, -2.05, -1.6], s:.15, ctrl:[ .1, -.55, -.45]},
+        {p:[  .35, 2.0, -2.5], s:.16, ctrl:[ .3,  .7, -.6]}
+      ];
+      var nodos = [];
+      function curvaHasta(px, ctrl){
+        var a = new THREE.Vector3().fromArray(px);
+        var b = nucleo.position.clone();
+        var dir = a.clone().sub(b).normalize();
+        b.add(dir.multiplyScalar(1.14));
+        var m = a.clone().lerp(b, .5).add(new THREE.Vector3().fromArray(ctrl));
+        return new THREE.QuadraticBezierCurve3(a, m, b);
+      }
+      var curvas = [];
+      defsNodos.forEach(function(d, i){
+        var n = aristas(d.geo, C.ink, .9);
+        n.position.fromArray(d.p); mundo.add(n);
+        nodos.push({m:n, base:d.p[1], giro:d.giro, fase:i*2.1});
+        var c = curvaHasta(d.p, d.ctrl); curvas.push(c);
+        mundo.add(new THREE.Line(
+          new THREE.BufferGeometry().setFromPoints(c.getPoints(72)),
+          new THREE.LineBasicMaterial({color:C.ink2, transparent:true, opacity:.5})));
+      });
+      var curvasMenores = [];
+      defsMenores.forEach(function(d, i){
+        var n = aristas(new THREE.OctahedronGeometry(d.s), C.bruma, .8);
+        n.position.fromArray(d.p); mundo.add(n);
+        nodos.push({m:n, base:d.p[1], giro:.4, fase:3+i*1.7});
+        var c = curvaHasta(d.p, d.ctrl); curvasMenores.push(c);
+        mundo.add(new THREE.Line(
+          new THREE.BufferGeometry().setFromPoints(c.getPoints(56)),
+          new THREE.LineBasicMaterial({color:C.bruma, transparent:true, opacity:.3})));
+      });
+
+      /* puntos que viajan por las aristas, como en el flujo SVG */
+      var viajeros = [];
+      function viajero(curva, color, r, dur, fase){
+        var m = new THREE.Mesh(
+          new THREE.SphereGeometry(r, 12, 10),
+          new THREE.MeshBasicMaterial({color:color, transparent:true}));
+        mundo.add(m);
+        viajeros.push({m:m, c:curva, dur:dur, fase:fase});
+      }
+      viajero(curvas[0], C.naranja, .062, 3.6, 0);
+      viajero(curvas[1], C.ink2,    .062, 3.6, .33);
+      viajero(curvas[2], C.verde,   .062, 3.6, .66);
+      viajero(curvasMenores[0], C.verde,   .04, 5.2, .15);
+      viajero(curvasMenores[2], C.naranja, .04, 5.2, .6);
+
+      registrar(canvas, scene, camera, renderer, function(t){
+        var oy = punt.x*.14 + Math.sin(t*.13)*.045;
+        var ox = punt.y*.09 + Math.cos(t*.11)*.03;
+        mundo.rotation.y += (oy - mundo.rotation.y)*.045;
+        mundo.rotation.x += (ox - mundo.rotation.x)*.045;
+        octa.rotation.y = t*.3;
+        casco.rotation.y = -t*.1;
+        casco.rotation.x = .35 + Math.sin(t*.07)*.1;
+        apice.scale.setScalar(1 + .16*Math.sin(t*2.1));
+        for(var i=0;i<nodos.length;i++){
+          var n = nodos[i];
+          n.m.rotation.x = t*n.giro; n.m.rotation.y = t*n.giro*1.35;
+          n.m.position.y = n.base + Math.sin(t*.6 + n.fase)*.05;
+        }
+        for(var j=0;j<viajeros.length;j++){
+          var v = viajeros[j];
+          var k = (t/v.dur + v.fase) % 1;
+          v.c.getPointAt(k, v.m.position);
+          v.m.material.opacity = Math.max(0, Math.min(1, Math.min(k, 1-k)*7));
+        }
+      });
+    })();
+
+    /* ============ CICLO: anillos armilares ligados al scroll ============ */
+    (function(){
+      var canvas = document.getElementById('gl-ciclo'); if(!canvas) return;
+      var renderer = crearRenderer(canvas);
+      var scene = new THREE.Scene();
+      scene.fog = new THREE.Fog(C.blanco, 4.2, 9.4);
+      var camera = new THREE.PerspectiveCamera(42, 1, .1, 40);
+      camera.position.set(0, 0, 6);
+
+      var grupo = new THREE.Group(); scene.add(grupo);
+      var a1 = new THREE.Group(); a1.add(aro(2.0, 128, C.bruma, .55)); grupo.add(a1);
+      var a2 = aro(2.0, 128, C.bruma, .42); a2.rotation.x = Math.PI/2.55; grupo.add(a2);
+      var a3 = aro(1.7, 128, C.bruma, .34); a3.rotation.y = Math.PI/2.3; a3.rotation.x = .35; grupo.add(a3);
+
+      /* seis estaciones sobre el anillo principal: 1 naranja, 4 y 5 verdes */
+      var colEst = [C.naranja, C.ink2, C.ink2, C.verde, C.verde, C.ink2];
+      for(var i=0;i<6;i++){
+        var a = Math.PI/2 - i*Math.PI/3;
+        var est = aristas(new THREE.OctahedronGeometry(.1), colEst[i], .95);
+        est.position.set(Math.cos(a)*2.0, Math.sin(a)*2.0, 0);
+        a1.add(est);
+      }
+
+      registrar(canvas, scene, camera, renderer, function(t){
+        var r = canvas.getBoundingClientRect();
+        var p = Math.max(0, Math.min(1, (innerHeight - r.top) / (innerHeight + r.height)));
+        grupo.rotation.y = -.55 + p*1.35 + t*.03;
+        grupo.rotation.x = .16 + Math.sin(t*.1)*.04;
+        a1.rotation.z = t*.02;
+      });
+    })();
+
+    /* ============ NOSOTROS: dos planos que se cruzan tras el nudo ============ */
+    (function(){
+      var canvas = document.getElementById('gl-nos'); if(!canvas) return;
+      var renderer = crearRenderer(canvas);
+      var scene = new THREE.Scene();
+      scene.fog = new THREE.Fog(C.blanco, 5.2, 10.5);
+      var camera = new THREE.PerspectiveCamera(32, 3, .1, 40);
+      camera.position.set(0, 0, 7.4);
+
+      function reja(w, h, nx, ny, color, op){
+        var pts = [];
+        for(var i=0;i<=nx;i++){ var x=-w/2+i*w/nx;
+          pts.push(new THREE.Vector3(x,-h/2,0), new THREE.Vector3(x,h/2,0)); }
+        for(var j=0;j<=ny;j++){ var y=-h/2+j*h/ny;
+          pts.push(new THREE.Vector3(-w/2,y,0), new THREE.Vector3(w/2,y,0)); }
+        return new THREE.LineSegments(
+          new THREE.BufferGeometry().setFromPoints(pts),
+          new THREE.LineBasicMaterial({color:color, transparent:true, opacity:op}));
+      }
+      var g1 = new THREE.Group(); g1.add(reja(5.0, 2.55, 10, 5, C.bruma, .48)); scene.add(g1);
+      var g2 = new THREE.Group(); g2.add(reja(5.0, 2.55, 10, 5, C.bruma, .48)); scene.add(g2);
+
+      /* eje de intersección con los dos acentos del nudo */
+      var eje = new THREE.Line(
+        new THREE.BufferGeometry().setFromPoints(
+          [new THREE.Vector3(0,-1.45,0), new THREE.Vector3(0,1.45,0)]),
+        new THREE.LineBasicMaterial({color:C.ink2, transparent:true, opacity:.6}));
+      scene.add(eje);
+      var pNar = new THREE.Mesh(new THREE.SphereGeometry(.055,12,10), new THREE.MeshBasicMaterial({color:C.naranja}));
+      pNar.position.set(0, 1.45, 0); scene.add(pNar);
+      var pVer = new THREE.Mesh(new THREE.SphereGeometry(.055,12,10), new THREE.MeshBasicMaterial({color:C.verde}));
+      pVer.position.set(0, -1.45, 0); scene.add(pVer);
+
+      registrar(canvas, scene, camera, renderer, function(t){
+        g1.rotation.y =  .62 + Math.sin(t*.16)*.05 + punt.x*.05;
+        g2.rotation.y = -.62 + Math.sin(t*.14 + 2)*.05 + punt.x*.05;
+        g1.rotation.x = g2.rotation.x = punt.y*.04;
+      });
+    })();
+
+    /* ============ GRANO: partículas gris-azuladas, parallax por capas ============ */
+    (function(){
+      var canvas = document.getElementById('gl-grano'); if(!canvas) return;
+      var renderer = crearRenderer(canvas);
+      var scene = new THREE.Scene();
+      var camera = new THREE.PerspectiveCamera(50, 2, .1, 40);
+      camera.position.set(0, 0, 7);
+
+      var cv = document.createElement('canvas'); cv.width = cv.height = 64;
+      var cx = cv.getContext('2d');
+      var gr = cx.createRadialGradient(32,32,0,32,32,30);
+      gr.addColorStop(0,'rgba(255,255,255,1)'); gr.addColorStop(1,'rgba(255,255,255,0)');
+      cx.fillStyle = gr; cx.fillRect(0,0,64,64);
+
+      var N = 230, base = new Float32Array(N*3), fases = new Float32Array(N);
+      var geo = new THREE.BufferGeometry();
+      var pos = new Float32Array(N*3);
+      for(var i=0;i<N;i++){
+        base[i*3]   = (Math.random()*2-1)*8;
+        base[i*3+1] = -7 + Math.random()*12;
+        base[i*3+2] = -5 + Math.random()*6.5;
+        fases[i] = Math.random()*Math.PI*2;
+      }
+      pos.set(base);
+      geo.setAttribute('position', new THREE.BufferAttribute(pos, 3));
+      var nube = new THREE.Points(geo, new THREE.PointsMaterial({
+        size:.065, map:new THREE.CanvasTexture(cv), color:C.brumaClara,
+        transparent:true, opacity:.45, depthWrite:false, sizeAttenuation:true}));
+      scene.add(nube);
+
+      registrar(canvas, scene, camera, renderer, function(t){
+        var p = geo.attributes.position.array;
+        for(var i=0;i<N;i++){
+          p[i*3]   = base[i*3]   + Math.cos(t*.11 + fases[i])*.14;
+          p[i*3+1] = base[i*3+1] + Math.sin(t*.15 + fases[i])*.2;
+        }
+        geo.attributes.position.needsUpdate = true;
+        camera.position.y = -scrollY*.00028 + punt.y*-.05;
+        camera.position.x = punt.x*.07;
+      }, true);
+    })();
+
+    /* ============ loop único: pausa fuera de viewport y con pestaña oculta ============ */
+    var io = new IntersectionObserver(function(entradas){
+      entradas.forEach(function(e){
+        var s = porCanvas.get(e.target);
+        if (s && !s.fija) s.visible = e.isIntersecting;
+      });
+    }, {rootMargin:'14% 0px'});
+    escenas.forEach(function(s){ if(!s.fija) io.observe(s.canvas); });
+
+    var rafId = null, prev = performance.now();
+    function marco(now){
+      rafId = requestAnimationFrame(marco);
+      var t = now/1000; prev = now;
+      for(var i=0;i<escenas.length;i++){
+        var s = escenas[i];
+        if (!s.visible) continue;
+        medir(s);
+        s.update(t);
+        s.renderer.render(s.scene, s.camera);
+      }
+    }
+    function arrancar(){ if(rafId==null){ prev = performance.now(); rafId = requestAnimationFrame(marco); } }
+    function frenar(){ if(rafId!=null){ cancelAnimationFrame(rafId); rafId = null; } }
+    document.addEventListener('visibilitychange', function(){ document.hidden ? frenar() : arrancar(); });
+    addEventListener('resize', function(){ escenas.forEach(medir); }, {passive:true});
+    arrancar();
+  }catch(err){
+    document.documentElement.classList.remove('webgl-on');
+    document.documentElement.classList.add('webgl-off');
+  }
+})();
+</script>
+</body>
+</html>
