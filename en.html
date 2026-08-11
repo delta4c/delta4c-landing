@@ -1234,8 +1234,20 @@ else (function(){
   var porCanvas = new Map();
 
   function crearRenderer(canvas){
-    var r = new THREE.WebGLRenderer({canvas:canvas, alpha:true, antialias:true});
+    /* preserveDrawingBuffer: al pausar la escena fuera de pantalla el lienzo queda
+       congelado en su último cuadro. Sin esto el navegador lo descarta y se ve vacío. */
+    var r = new THREE.WebGLRenderer({canvas:canvas, alpha:true, antialias:true,
+                                     preserveDrawingBuffer:true});
     r.setPixelRatio(Math.min(devicePixelRatio, 1.8));
+    /* Si la GPU nos suelta el contexto (pasa cuando hay varios lienzos WebGL
+       compitiendo por memoria), el lienzo queda vacío para siempre. Antes que
+       dejar un hueco, volvemos a los diagramas en SVG, que dicen lo mismo. */
+    canvas.addEventListener('webglcontextlost', function(e){
+      e.preventDefault();
+      document.documentElement.classList.remove('webgl-on');
+      document.documentElement.classList.add('webgl-off');
+      if (typeof frenar === 'function') frenar();
+    });
     return r;
   }
   function registrar(canvas, escena, camara, renderer, update, siempreVisible){
