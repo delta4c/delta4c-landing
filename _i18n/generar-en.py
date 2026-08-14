@@ -18,8 +18,8 @@ import sys
 from pathlib import Path
 
 RAIZ = Path(__file__).resolve().parent.parent
-ORIGEN = RAIZ / "delta4c" / "index.html"
-DESTINO = RAIZ / "delta4c" / "en.html"
+ORIGEN = RAIZ / "index.html"
+DESTINO = RAIZ / "en.html"
 
 # (español, inglés) — el orden importa: las cadenas largas van primero para que
 # una corta no rompa a una larga que la contiene.
@@ -30,12 +30,12 @@ TEXTOS = [
      '<title>Delta 4C — We make your systems work together, for you</title>'),
     ('content="Hacemos que tus sistemas trabajen juntos, para vos, sin romper lo que ya anda. Leemos tus datos sin tocar lo que factura y construimos arriba lo que te falta."',
      'content="We make your systems work together, for you, without breaking what already runs. We read your data without disrupting your billing and build on top of what’s missing."'),
-    ('<link rel="canonical" href="https://delta4c.vercel.app/">',
-     '<link rel="canonical" href="https://delta4c.vercel.app/en">'),
+    ('<link rel="canonical" href="https://delta4c.com/">',
+     '<link rel="canonical" href="https://delta4c.com/en">'),
     ('<meta property="og:locale" content="es_AR">',
      '<meta property="og:locale" content="en_US">'),
-    ('<meta property="og:url" content="https://delta4c.vercel.app/">',
-     '<meta property="og:url" content="https://delta4c.vercel.app/en">'),
+    ('<meta property="og:url" content="https://delta4c.com/">',
+     '<meta property="og:url" content="https://delta4c.com/en">'),
     ('<meta property="og:title" content="Hacemos que tus sistemas trabajen juntos, para vos">',
      '<meta property="og:title" content="We make your systems work together, for you">'),
     ('<meta property="og:description" content="Leemos tus datos sin tocar lo que factura, y construimos arriba lo que te falta: tu negocio entero, en un solo lugar.">',

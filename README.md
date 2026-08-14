@@ -1,9 +1,9 @@
 # Delta 4C — Landing
 
-Sitio de una sola página de [Delta 4C](https://delta4c.vercel.app), en español e inglés.
+Sitio de una sola página de [Delta 4C](https://delta4c.com), en español e inglés.
 
-- **Español:** https://delta4c.vercel.app
-- **English:** https://delta4c.vercel.app/en
+- **Español:** https://delta4c.com
+- **English:** https://delta4c.com/en
 
 ## Cómo está hecho
 
@@ -21,6 +21,8 @@ favicon.png           ícono 512 · apple-touch-icon.png ícono 180
 og.png                previsualización al compartir el link (1200x630)
 three.module.min.js   three.js r160 (MIT), servido desde el mismo dominio
 vercel.json           cleanUrls, para que /en funcione sin extensión
+robots.txt            permite indexar todo, apunta al sitemap
+sitemap.xml           las dos páginas (/ y /en) con sus hreflang
 ```
 
 ## Verla en local
