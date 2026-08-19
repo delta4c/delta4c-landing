@@ -1,0 +1,1048 @@
+<!doctype html>
+<!--
+  DELTA·4C — notas · "La economía crece y vos no"
+  Contenido escrito en el repo privado (blog/notas/), empaquetado acá para publicar.
+  Misma paleta y tipografia que index.html: es la landing, en formato lectura.
+  Sin JS, sin 3D, sin dependencias: la nota tiene que leerse en cualquier lado.
+-->
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>La economía crece y vos no — Delta 4C</title>
+<meta name="description" content="El país proyecta 2,7% de crecimiento y las ventas minoristas PyME cayeron 3,8%. Las dos cosas son ciertas: qué cambió en el negocio de una PyME argentina.">
+<meta name="author" content="Nicolás Baseggio">
+<link rel="canonical" href="https://delta4c.com/notas/la-economia-crece-y-vos-no">
+
+<!-- previsualizacion al compartir el link (WhatsApp, LinkedIn, Slack) -->
+<meta property="og:type" content="article">
+<meta property="og:locale" content="es_AR">
+<meta property="og:site_name" content="Delta 4C">
+<meta property="og:url" content="https://delta4c.com/notas/la-economia-crece-y-vos-no">
+<meta property="og:title" content="La economía crece y vos no">
+<meta property="og:description" content="El país proyecta 2,7% de crecimiento y las ventas minoristas PyME cayeron 3,8%. Las dos cosas son ciertas: qué cambió en el negocio de una PyME argentina.">
+<meta property="og:image" content="https://delta4c.com/og.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="Delta 4C">
+<meta property="article:published_time" content="2026-08-16">
+<meta property="article:author" content="Nicolás Baseggio">
+<meta property="article:section" content="Análisis">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="La economía crece y vos no">
+<meta name="twitter:description" content="El país proyecta 2,7% de crecimiento y las ventas minoristas PyME cayeron 3,8%. Las dos cosas son ciertas: qué cambió en el negocio de una PyME argentina.">
+<meta name="twitter:image" content="https://delta4c.com/og.png">
+<meta name="theme-color" content="#ffffff">
+
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'><defs><linearGradient id='g' x1='0' y1='1' x2='1' y2='0'><stop offset='0' stop-color='%234C6DBC'/><stop offset='1' stop-color='%23CC9744'/></linearGradient></defs><rect width='64' height='64' rx='14' fill='%230A0A12'/><path d='M32 15 L51 49 H13 Z' fill='url(%23g)'/></svg>">
+<link rel="icon" type="image/png" sizes="512x512" href="/favicon.png">
+<link rel="apple-touch-icon" href="/apple-touch-icon.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,400..800&family=Figtree:ital,wght@0,400..700;1,400..700&display=swap" rel="stylesheet">
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "Article",
+  "headline": "La economía crece y vos no",
+  "description": "El país proyecta 2,7% de crecimiento y las ventas minoristas PyME cayeron 3,8%. Las dos cosas son ciertas: qué cambió en el negocio de una PyME argentina.",
+  "inLanguage": "es-AR",
+  "datePublished": "2026-08-16",
+  "dateModified": "2026-08-16",
+  "author": { "@type": "Person", "name": "Nicolás Baseggio" },
+  "publisher": {
+    "@type": "Organization",
+    "name": "Delta 4C",
+    "url": "https://delta4c.com/",
+    "logo": { "@type": "ImageObject", "url": "https://delta4c.com/logo.png" }
+  },
+  "mainEntityOfPage": { "@type": "WebPage", "@id": "https://delta4c.com/notas/la-economia-crece-y-vos-no" },
+  "image": "https://delta4c.com/og.png",
+  "isAccessibleForFree": true
+}
+</script>
+
+<style>
+/* ============================== TOKENS ==============================
+   Los mismos de index.html. Tres agregados que la landing no necesitaba:
+   un neutro suave para cajas y un rojo para los números que caen.       */
+:root{
+  --bg:#ffffff;
+  --ink:#242a3d; --ink-2:#525c76; --ink-3:#8d94ad;
+  --line:#e5e7ef; --line-2:#d5d9e5;
+  --naranja:#e0763b; --naranja-deep:#b1531b; --naranja-tinte:#fdf1e7;
+  --verde:#22795a; --verde-deep:#155c42; --verde-tinte:#eaf5ef;
+  --navy:#1b2134;
+  --tinte-n:#f7f8fb;                      /* nuevo: cajas y encabezados de tabla */
+  --rojo:#b3392e; --rojo-tinte:#fdf0ee;   /* nuevo: la caída, el "no" */
+  --exp:cubic-bezier(.16,1,.3,1);
+  --e-quart:cubic-bezier(.25,1,.5,1);
+  --f-d:"Bricolage Grotesque",system-ui,sans-serif;
+  --f-t:"Figtree",system-ui,sans-serif;
+  --f-m:ui-monospace,SFMono-Regular,"SF Mono",Menlo,Consolas,"Liberation Mono",monospace;
+}
+@supports (color: oklch(0% 0 0)){
+  :root{
+    --ink:oklch(25% .03 265); --ink-2:oklch(45% .033 265); --ink-3:oklch(65% .025 265);
+    --line:oklch(91.5% .008 265); --line-2:oklch(86% .012 265);
+    --naranja:oklch(68% .17 45); --naranja-deep:oklch(54% .145 45); --naranja-tinte:oklch(96.5% .022 60);
+    --verde:oklch(50% .1 160); --verde-deep:oklch(41% .09 160); --verde-tinte:oklch(96.2% .02 165);
+    --navy:oklch(23% .032 265);
+    --tinte-n:oklch(97.6% .005 265);
+    --rojo:oklch(48% .15 28); --rojo-tinte:oklch(96.5% .018 30);
+  }
+}
+
+/* ============================== BASE ============================== */
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+html,body{overflow-x:clip}
+body{
+  font:400 1.0625rem/1.72 var(--f-t);
+  color:var(--ink); background:var(--bg);
+  -webkit-font-smoothing:antialiased; text-rendering:optimizeLegibility;
+}
+::selection{background:var(--naranja-tinte);color:var(--ink)}
+img,svg{max-width:100%;height:auto}
+a{color:inherit}
+:focus-visible{outline:2px solid var(--naranja-deep);outline-offset:3px;border-radius:4px}
+.sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
+.wrap{width:min(720px,92vw);margin-inline:auto}
+.wrap-wide{width:min(720px,92vw);margin-inline:auto}
+.wrap-wide > .scroll-x,
+.wrap-wide > .figuras,
+.wrap-wide > .tres{
+  width:min(920px,92vw);
+  margin-inline:calc((min(720px,92vw) - min(920px,92vw)) / 2);
+}
+.marco{width:min(1160px,92vw);margin-inline:auto}
+
+/* ============================== HEADER DEL SITIO ============================== */
+header.sitio{
+  position:sticky;top:0;z-index:50;
+  background:#fff;border-bottom:1px solid var(--line);
+}
+header.sitio .barra{
+  width:min(1160px,92vw);margin-inline:auto;
+  display:flex;align-items:center;gap:2rem;
+  padding-block:.95rem;
+}
+header.sitio .logo{display:inline-flex;align-items:center;text-decoration:none}
+header.sitio .logo img{height:32px;width:auto;display:block;flex:none}
+.navlinks{display:flex;gap:1.7rem;margin-left:auto}
+.navlinks a{
+  font:500 .98rem/1 var(--f-t);color:var(--ink-2);text-decoration:none;
+  transition:color .3s var(--exp);
+}
+.navlinks a:hover{color:var(--ink)}
+.navlinks a[aria-current="page"]{color:var(--ink);font-weight:650}
+.nav-cta{
+  font:600 .95rem/1 var(--f-t);color:var(--naranja-deep);text-decoration:none;
+  border:1.5px solid var(--line-2);border-radius:999px;padding:.62rem 1.05rem;
+  transition:border-color .3s var(--exp),transform .3s var(--exp),box-shadow .3s var(--exp);
+  white-space:nowrap;margin-left:auto;
+}
+.navlinks ~ .nav-cta{margin-left:1.5rem}
+.nav-cta:hover{border-color:var(--naranja);transform:translateY(-1px);box-shadow:0 8px 20px -12px rgba(180,87,28,.5)}
+@media (max-width:760px){ .navlinks{display:none} .navlinks ~ .nav-cta{margin-left:auto} }
+@media (max-width:430px){ .nav-cta{font-size:.86rem;padding:.55rem .85rem} }
+
+/* barra de progreso de lectura — sin JS, sin dependencias */
+.progreso{position:fixed;top:0;left:0;right:0;height:2px;z-index:60;pointer-events:none}
+.progreso i{display:block;height:100%;background:var(--naranja);transform-origin:0 50%;transform:scaleX(0)}
+@supports (animation-timeline:scroll()){
+  .progreso i{animation:leido linear;animation-timeline:scroll(root block)}
+  @keyframes leido{from{transform:scaleX(0)}to{transform:scaleX(1)}}
+}
+@media (prefers-reduced-motion:reduce){ .progreso{display:none} }
+
+/* ============================== CABEZA DEL ARTÍCULO ============================== */
+.volver{
+  display:inline-block;margin-top:2.2rem;
+  font:600 .92rem/1 var(--f-t);color:var(--ink-2);text-decoration:none;
+  transition:color .3s var(--exp);
+}
+.volver:hover{color:var(--naranja-deep)}
+header.top{padding:1.6rem 0 2.4rem;border-bottom:1px solid var(--line)}
+.brand{
+  font:600 .8rem/1.2 var(--f-t);letter-spacing:.13em;text-transform:uppercase;
+  color:var(--naranja-deep);margin:0 0 1.3rem;
+}
+h1{
+  font-family:var(--f-d);font-size:clamp(2.35rem,5.6vw,3.6rem);font-weight:750;
+  line-height:1.04;letter-spacing:-.03em;margin:0 0 1.3rem;text-wrap:balance;
+}
+.bajada{font-size:clamp(1.12rem,1.5vw,1.24rem);line-height:1.6;color:var(--ink-2);margin:0 0 1.7rem;max-width:56ch}
+.firma{display:flex;flex-wrap:wrap;gap:.55rem;align-items:center}
+.firma span{
+  font:400 .78rem/1 var(--f-m);color:var(--ink-2);
+  border:1px solid var(--line-2);border-radius:999px;padding:.42rem .7rem;
+}
+.firma .autor{color:var(--ink);font-weight:600;border-color:var(--ink-3)}
+
+/* ============================== CUERPO ============================== */
+main section{padding:3rem 0;border-bottom:1px solid var(--line)}
+main section:last-of-type{border-bottom:none}
+h2{
+  font-family:var(--f-d);font-size:clamp(1.5rem,3.2vw,2rem);font-weight:700;
+  line-height:1.16;letter-spacing:-.022em;margin:0 0 .5rem;text-wrap:balance;
+}
+.eyebrow{
+  font:600 .72rem/1.2 var(--f-t);letter-spacing:.14em;text-transform:uppercase;
+  color:var(--ink-3);margin:0 0 .9rem;
+}
+h3{
+  font-family:var(--f-d);font-size:1.16rem;font-weight:650;letter-spacing:-.015em;
+  margin:2rem 0 .6rem;
+}
+p{margin:0 0 1.1rem}
+p:last-child{margin-bottom:0}
+main a{color:var(--naranja-deep);text-underline-offset:3px;text-decoration-color:rgba(177,83,27,.4)}
+main a:hover{text-decoration-color:currentColor}
+ul,ol{margin:0 0 1.1rem;padding-left:1.25em}
+li{margin-bottom:.6rem}
+li::marker{color:var(--ink-3)}
+strong{font-weight:650}
+.lede{font-size:1.16rem;line-height:1.62}
+
+/* el dato grande */
+.figuras{display:grid;gap:1px;background:var(--line);border:1px solid var(--line);border-radius:14px;overflow:clip;margin:1.7rem 0}
+@media (min-width:640px){ .figuras{grid-template-columns:repeat(3,1fr)} }
+.fig{background:#fff;padding:1.3rem 1.15rem}
+.fig .n{
+  font-family:var(--f-d);font-weight:750;font-size:1.95rem;letter-spacing:-.03em;
+  font-variant-numeric:tabular-nums;display:block;margin-bottom:.35rem;
+}
+.fig .n.up{color:var(--verde-deep)}
+.fig .n.down{color:var(--rojo)}
+.fig .lbl{font-size:.92rem;color:var(--ink-2);line-height:1.45;display:block}
+.fig .src{font:400 .68rem/1.3 var(--f-m);color:var(--ink-3);margin-top:.6rem;display:block;letter-spacing:.02em}
+
+/* la frase que se subraya */
+blockquote{
+  margin:1.9rem 0;padding:0 0 0 1.25rem;border-left:2.5px solid var(--naranja);
+  font-family:var(--f-d);font-size:1.28rem;line-height:1.34;font-weight:650;letter-spacing:-.02em;
+  text-wrap:balance;
+}
+blockquote p{margin:0}
+blockquote cite{
+  display:block;font:400 .75rem/1.4 var(--f-m);font-style:normal;
+  color:var(--ink-3);margin-top:.7rem;letter-spacing:.03em;
+}
+
+/* apartados */
+.caja{
+  background:var(--tinte-n);border:1px solid var(--line);border-radius:16px;
+  padding:1.4rem 1.5rem;margin:1.7rem 0;font-size:.99rem;
+}
+.caja .tit{
+  font:600 .72rem/1.2 var(--f-t);letter-spacing:.13em;text-transform:uppercase;
+  color:var(--verde-deep);margin:0 0 .7rem;
+}
+.caja p{margin-bottom:.75rem}
+.caja p:last-child{margin-bottom:0}
+.caja.alerta{background:var(--naranja-tinte);border-color:#f0d7c2}
+.caja.alerta .tit{color:var(--naranja-deep)}
+
+/* tablas */
+.scroll-x{overflow-x:auto;margin:1.7rem 0;border:1px solid var(--line);border-radius:14px}
+table{border-collapse:collapse;width:100%;font-size:.92rem;min-width:480px}
+th,td{text-align:left;padding:.72rem .95rem;border-bottom:1px solid var(--line);vertical-align:top}
+thead th{
+  font:500 .68rem/1.3 var(--f-m);letter-spacing:.09em;text-transform:uppercase;
+  color:var(--ink-3);background:var(--tinte-n);border-bottom:1px solid var(--line-2);
+}
+tbody tr:last-child td{border-bottom:none}
+td.num{font-family:var(--f-m);font-variant-numeric:tabular-nums;white-space:nowrap}
+td.si{color:var(--verde-deep);font-weight:650}
+td.no{color:var(--rojo);font-weight:650}
+
+/* el pliegue oscuro — mismo tratamiento que el panel de CTA de la landing */
+.fold{background:var(--navy);color:#fff;border-bottom:none !important;padding:clamp(3.2rem,6vw,4.6rem) 0}
+.fold h2{color:#fff}
+.fold h3{color:#fff}
+.fold p,.fold li{color:#c8cddd}
+.fold .eyebrow{color:#8c94ab}
+.fold strong{color:#fff}
+.fold li::marker{color:#6f7793}
+.fold blockquote{border-left-color:var(--naranja);color:#fff}
+.fold blockquote cite{color:#aab0c4}
+.fold .caja{background:rgba(255,255,255,.05);border-color:rgba(255,255,255,.14)}
+.fold .caja p{color:#dfe3ee}
+.fold a{color:#dfe3ee;text-decoration-color:rgba(255,255,255,.35)}
+.fold a:hover{color:#fff}
+
+/* tres columnas de veredicto */
+.tres{display:grid;gap:.9rem;margin:1.7rem 0}
+@media (min-width:760px){ .tres{grid-template-columns:repeat(3,1fr)} }
+.col{border:1px solid var(--line-2);background:#fff;border-radius:16px;padding:1.15rem}
+.col h4{
+  margin:0 0 .8rem;font:600 .72rem/1.2 var(--f-t);letter-spacing:.12em;text-transform:uppercase;
+}
+.col.ok h4{color:var(--verde-deep)}
+.col.duda h4{color:var(--naranja-deep)}
+.col.no h4{color:var(--rojo)}
+.col ul{padding-left:1.1em;margin:0}
+.col li{font-size:.92rem;color:var(--ink-2);margin-bottom:.55rem}
+.col li:last-child{margin-bottom:0}
+.fold .col{background:rgba(255,255,255,.04);border-color:rgba(255,255,255,.14)}
+.fold .col li{color:#c8cddd}
+
+/* ============================== CIERRE + PIE ============================== */
+.cierre-cta{
+  background:var(--navy);color:#fff;border-radius:26px;text-align:center;
+  padding:clamp(2.4rem,5vw,3.4rem) clamp(1.4rem,4vw,3rem);margin:3.5rem 0 0;
+}
+.cierre-cta h2{color:#fff;font-size:clamp(1.6rem,3.4vw,2.2rem);margin-bottom:.9rem}
+.cierre-cta p{color:#c8cddd;max-width:52ch;margin:0 auto 1.8rem}
+.btn{
+  display:inline-flex;align-items:center;gap:.5rem;
+  font:600 1.05rem/1 var(--f-t);text-decoration:none;
+  padding:1rem 1.6rem;border-radius:999px;
+  transition:transform .35s var(--exp),box-shadow .35s var(--exp),background-color .35s var(--exp);
+}
+.btn-primario{background:var(--naranja-deep);color:#fff;box-shadow:0 14px 30px -14px rgba(177,83,27,.75)}
+.btn-primario:hover{transform:translateY(-2px);box-shadow:0 20px 40px -16px rgba(177,83,27,.85)}
+@media (prefers-reduced-motion:reduce){ .btn:hover,.nav-cta:hover{transform:none} }
+
+footer.pie{padding:2.6rem 0 0;font-size:.95rem;color:var(--ink-2);border-top:1px solid var(--line)}
+footer.pie h3{font-size:1.02rem;margin-top:1.7rem;color:var(--ink)}
+footer.pie h3:first-child{margin-top:0}
+footer.pie ul{padding-left:1.1em}
+footer.pie li{margin-bottom:.4rem;font-size:.92rem}
+.colofon{
+  font:400 .78rem/1.7 var(--f-m);color:var(--ink-3);margin-top:2.1rem;
+  padding-top:1.2rem;border-top:1px solid var(--line);
+}
+footer.sitio{border-top:1px solid var(--line);padding-block:2.6rem 3rem;text-align:center;margin-top:3.5rem}
+footer.sitio .linea{font-size:.98rem;color:var(--ink-2);margin-bottom:.75rem}
+footer.sitio .marca-f{font:700 1.02rem/1 var(--f-d);color:var(--ink)}
+footer.sitio .marca-f .punto{color:var(--naranja-deep)}
+footer.sitio .remate{font-family:var(--f-d);font-size:1.35rem;font-weight:650;letter-spacing:-.02em}
+
+/* ============================== ÍNDICE DE NOTAS ============================== */
+.tapa{padding:clamp(3rem,7vw,4.6rem) 0 clamp(2rem,4vw,2.8rem)}
+.tapa h1{font-size:clamp(2.6rem,6.5vw,4.1rem);margin-bottom:1.2rem}
+.tapa .tesis{font-size:clamp(1.15rem,1.6vw,1.32rem);line-height:1.55;color:var(--ink-2);max-width:46ch}
+.reglas{
+  display:flex;flex-wrap:wrap;gap:.6rem;margin-top:1.9rem;
+}
+.reglas span{
+  font:500 .82rem/1.35 var(--f-t);color:var(--ink-2);
+  background:var(--tinte-n);border:1px solid var(--line);border-radius:999px;padding:.5rem .95rem;
+}
+.lista{padding:0;list-style:none;margin:0 0 clamp(2.4rem,5vw,3.4rem)}
+.lista li:last-child{border-bottom:1px solid var(--line)}
+.lista li{margin:0;border-top:1px solid var(--line)}
+.entrada{
+  display:block;text-decoration:none;color:inherit;
+  padding:2.1rem 0;
+  transition:background-color .3s var(--exp);
+}
+.entrada:hover{background:var(--tinte-n)}
+.entrada:hover h2{color:var(--naranja-deep)}
+.meta{display:flex;flex-wrap:wrap;gap:.75rem;align-items:center;margin-bottom:.75rem}
+.carril{
+  font:600 .7rem/1.2 var(--f-t);letter-spacing:.13em;text-transform:uppercase;
+  color:var(--verde-deep);background:var(--verde-tinte);border-radius:999px;padding:.4rem .75rem;
+}
+.meta time,.meta .lectura{font:400 .78rem/1 var(--f-m);color:var(--ink-3);letter-spacing:.02em}
+.entrada h2{font-size:clamp(1.6rem,3.4vw,2.15rem);margin-bottom:.6rem;transition:color .3s var(--exp)}
+.entrada p{color:var(--ink-2);max-width:60ch;font-size:1.02rem;margin:0}
+.entrada .seguir{
+  display:inline-block;margin-top:1rem;
+  font:600 .95rem/1 var(--f-t);color:var(--naranja-deep);
+}
+.proximas{
+  padding:0;margin-bottom:clamp(3rem,6vw,4.5rem);
+  font-size:.98rem;color:var(--ink-2);
+}
+.proximas .tit{
+  font:600 .72rem/1.2 var(--f-t);letter-spacing:.13em;text-transform:uppercase;
+  color:var(--ink-3);margin:0 0 .9rem;
+}
+.proximas ul{list-style:none;padding:0;margin:0}
+.proximas li{
+  padding-left:1.4rem;position:relative;margin-bottom:.6rem;color:var(--ink-2);
+}
+.proximas li::before{
+  content:"";position:absolute;left:0;top:.62em;
+  width:.5rem;height:.5rem;border:1.5px solid var(--line-2);border-radius:50%;
+}
+</style>
+</head>
+<body>
+
+<div class="progreso" aria-hidden="true"><i></i></div>
+
+<header class="sitio">
+  <div class="barra">
+    <a class="logo" href="/" aria-label="Delta 4C"><img src="/logo.png" alt="" width="55" height="32" decoding="async"></a>
+    <nav class="navlinks" aria-label="Secciones">
+      <a href="/#problema">El problema real</a>
+      <a href="/#ciclo">Cómo trabajamos</a>
+      <a href="/#nosotros">Por qué nosotros</a>
+      <a href="/notas" aria-current="page">Notas</a>
+    </nav>
+    <a class="nav-cta" href="https://calendly.com/nicolasbaseggiodev/30min" target="_blank" rel="noopener">Agendá una charla <span aria-hidden="true">→</span></a>
+  </div>
+</header>
+
+<main>
+
+<div class="wrap"><a class="volver" href="/notas">← Todas las notas</a></div>
+
+<article>
+
+<header class="top">
+  <div class="wrap">
+    <p class="brand">Delta·4C · notas de campo · análisis</p>
+    <h1>La economía crece y vos no</h1>
+    <p class="bajada">
+      El país proyecta 2,7% de crecimiento. Las ventas minoristas PyME cayeron 3,8%.
+      Las dos cosas son ciertas al mismo tiempo, y entender por qué es entender qué
+      cambió en el negocio de una PyME argentina.
+    </p>
+    <div class="firma">
+      <span class="autor">Nicolás Baseggio</span>
+      <span><time datetime="2026-08-16">16 de agosto de 2026</time></span>
+      <span>lectura: 14 min</span>
+      <span>datos al 15-08-2026</span>
+    </div>
+  </div>
+</header>
+
+<section>
+  <div class="wrap">
+    <p class="lede">
+      Si tenés una distribuidora en el interior, estos meses venís teniendo una conversación
+      incómoda. Los números del país dicen una cosa y los tuyos dicen otra. Y como los del país
+      salen en el diario, terminás sospechando de los tuyos.
+    </p>
+    <p>
+      No hace falta. Los dos son correctos. Lo que pasa es que <strong>el agregado y la PyME se
+      despegaron</strong>, y nadie te lo explicó.
+    </p>
+
+    <div class="figuras">
+      <div class="fig">
+        <span class="n up">+2,7%</span>
+        <span class="lbl">PBI proyectado para 2026</span>
+        <span class="src">REM · BCRA · jul-2026</span>
+      </div>
+      <div class="fig">
+        <span class="n down">−3,8%</span>
+        <span class="lbl">Ventas minoristas PyME, interanual</span>
+        <span class="src">CAME · jul-2026</span>
+      </div>
+      <div class="fig">
+        <span class="n down">−5,4%</span>
+        <span class="lbl">Ventas PyME de alimentos y bebidas</span>
+        <span class="src">CAME · jul-2026</span>
+      </div>
+    </div>
+
+    <p>
+      La producción industrial PyME cayó 7,8% interanual en mayo, con la capacidad instalada al
+      57,1%. El EMAE desestacionalizado está plano desde diciembre de 2025: bajó 0,3% en cinco
+      meses. No es recesión. Es meseta.
+    </p>
+    <p>
+      Y el rubro más golpeado del comercio minorista PyME es <strong>alimentos y bebidas</strong>.
+      Es decir: exactamente la góndola de un distribuidor mayorista del interior.
+    </p>
+    <blockquote>
+      <p>La economía no va mal. Lo que pasa es que la recuperación no está pasando por donde estás vos.</p>
+    </blockquote>
+  </div>
+</section>
+
+<section>
+  <div class="wrap">
+    <p class="eyebrow">01 · Lo que se fue</p>
+    <h2>Las tres palancas defensivas</h2>
+    <p>
+      Durante veinte años, una PyME argentina compensaba ineficiencia con tres cosas que no
+      dependían de ella. Las tres se apagaron casi al mismo tiempo.
+    </p>
+
+    <h3>La inflación que licuaba</h3>
+    <p>
+      De 211,4% en 2023 a 117,8% en 2024 y 31,5% en 2025. Con esa inflación se licuaban pasivos,
+      se ganaba con el stock antes que con la venta, y remarcar antes que el vecino era una
+      destreza rentable. Eso se terminó.
+    </p>
+    <p>
+      Con una reserva importante que casi nadie dice: <strong>la desinflación se frenó</strong>.
+      La interanual de julio de 2026 es 33,8% — subió 2,3 puntos desde el piso de diciembre — y el
+      índice mensual lleva doce meses sin perforar el 1,9%. Quien planificó 2026 asumiendo que la
+      baja seguía, está corriendo detrás de una inflación que dejó de bajar.
+    </p>
+
+    <h3>El tipo de cambio que protegía</h3>
+    <p>
+      El tipo de cambio real multilateral está hoy <strong>31% más apreciado que en diciembre de
+      2023</strong> (ITCRM 85,8 contra 124,9) y en el cuartil más apreciado de los últimos treinta
+      años: de los 355 meses de la serie desde 1997, solo 85 tuvieron un valor menor. En 2026 se
+      apreció 9,4% en siete meses.
+    </p>
+    <p>
+      Lo que se siente como "no puedo competir con lo importado" no es percepción. Es la aritmética
+      de dos series oficiales.
+    </p>
+
+    <h3>El crédito que subsidiaba</h3>
+    <p>
+      Cuatro trimestres seguidos de endurecimiento de los estándares de aprobación para PyMEs. En
+      el segundo trimestre de 2026, el 35,3% de los bancos endureció contra 5,9% que flexibilizó.
+      Y el endurecimiento es <strong>más fuerte con las PyMEs que con las grandes empresas</strong>
+      (índice de difusión −29,4 contra −22,2). La brecha de acceso se está abriendo, no cerrando.
+    </p>
+
+    <div class="caja">
+      <p class="tit">Y la apertura, que no se ve donde todos la buscan</p>
+      <p>
+        En el primer semestre de 2026 Argentina importó <strong>6,4% menos</strong> que en el
+        primer semestre de 2023. Pero importó <strong>65,1% más en bienes de consumo y
+        vehículos</strong>, y el share de consumo sobre el total pasó de 13,8% a
+        <strong>24,3%</strong>: el más alto de toda la serie disponible. Mientras tanto, los bienes
+        de capital cayeron 14,7% interanual.
+      </p>
+      <p style="margin-bottom:0">
+        Lo que entra no son máquinas que te bajan el costo. Son productos terminados que compiten
+        con lo que vendés. <strong>Un distribuidor compite hoy contra productos que en 2023 no
+        estaban en la góndola</strong> — y que además están baratos en pesos.
+      </p>
+    </div>
+  </div>
+</section>
+
+<section class="fold">
+  <div class="wrap">
+    <p class="eyebrow">02 · Lo que quedó</p>
+    <h2>Las palancas no desaparecieron: se dieron vuelta</h2>
+    <p>
+      Es tentador cerrar la lista anterior diciendo que no quedó ninguna palanca. Sería falso, y
+      además tira a la basura el mejor argumento disponible.
+    </p>
+    <p>
+      <strong>La estabilidad de precios es una palanca.</strong> Y es grande. Con inflación de tres
+      dígitos ningún sistema de costos funciona: el margen te lo da o te lo saca el mes, y todo dato
+      interno es ruido. Cuando la inflación baja a un dígito mensual, ese mismo dato
+      <strong>pasa a ser señal por primera vez en años</strong>. El número que antes no servía para
+      nada, ahora sirve.
+    </p>
+    <blockquote>
+      <p>La inflación alta premiaba la destreza financiera. La desinflación con apertura premia la destreza operativa.</p>
+    </blockquote>
+    <p>
+      Ese es el cambio de fondo, y explica por qué tantos dueños buenos sienten que dejaron de
+      serlo. No dejaron de serlo. <strong>Siguen siendo buenos en un juego que dejó de pagar.</strong>
+    </p>
+    <p>
+      El precio de los factores —impuestos, energía, flete, financiamiento— sigue apretando y sigue
+      doliendo. Nadie va a decir lo contrario. Pero dejó de ser algo que el dueño pueda mover:
+      pasó del lado de los parámetros. La distinción útil no es entre restricciones que existen y
+      restricciones que no. Es entre <strong>las que podés mover y las que solo podés sufrir</strong>.
+    </p>
+  </div>
+</section>
+
+<section>
+  <div class="wrap">
+    <p class="eyebrow">03 · El hallazgo</p>
+    <h2>Por qué no te prestan (no es lo que pensás)</h2>
+    <p>
+      Acá aparece el dato que reordena todo el análisis, y no es una opinión nuestra: son los
+      propios bancos respondiendo una encuesta del Banco Central.
+    </p>
+    <p>
+      Cuando les preguntan por qué endurecieron los estándares de crédito a PyMEs, califican cada
+      factor del 1 al 3. Estos son los promedios del segundo trimestre de 2026:
+    </p>
+    <div class="scroll-x">
+      <table>
+        <thead><tr><th>Factor</th><th>Puntaje</th><th></th></tr></thead>
+        <tbody>
+          <tr><td>Deterioro de la situación del sector del deudor</td><td class="num no">3,00</td><td>máximo</td></tr>
+          <tr><td>Aumento del riesgo de la cartera</td><td class="num no">2,80</td><td></td></tr>
+          <tr><td>Deterioro de la situación económica</td><td class="num">2,60</td><td></td></tr>
+          <tr><td>Restricciones de capital del banco</td><td class="num si">1,00</td><td>mínimo</td></tr>
+          <tr><td>Restricciones de liquidez del banco</td><td class="num si">1,00</td><td>mínimo</td></tr>
+          <tr><td>Cambios normativos del BCRA</td><td class="num si">1,00</td><td>mínimo</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <p>
+      Capital, liquidez y normativa puntúan <strong>1,00: el mínimo de la escala</strong>. Lo que
+      sube al máximo es el <strong>riesgo percibido del deudor y de su sector</strong>.
+    </p>
+    <blockquote>
+      <p>El crédito PyME no está racionado porque al banco le falte plata. Está racionado porque el banco no puede distinguir qué PyME es buena.</p>
+    </blockquote>
+    <p>
+      La restricción no es de tasa. <strong>Es de información.</strong> Y esa es una restricción de
+      naturaleza completamente distinta, porque una PyME que puede mostrar rotación, días de
+      cobranza y margen por producto con números auditables está resolviendo, literalmente, el
+      problema que su banco declara tener.
+    </p>
+    <p>
+      El contexto de cobranza refuerza el punto. La irregularidad de la cartera privada del sistema
+      financiero pasó de 2,2% en abril de 2025 a 7,3% en abril de 2026: <strong>se multiplicó por
+      más de tres en doce meses</strong>, y llegó a 7,7% en mayo. Con un matiz que importa: la mora
+      está en las <strong>familias (12,8%)</strong>, no en las <strong>empresas (3,5%)</strong>.
+      A un distribuidor no se le están cayendo los clientes empresa. Se le está cayendo el
+      consumidor final, y eso sube por la cadena convertido en plazo de cobranza.
+    </p>
+    <p>
+      Con inflación de 2,1% mensual, una factura cobrada a 60 días pierde 4,2% de valor real; a 90
+      días, 6,4%. Ese es el costo financiero de la cobranza, y no figura en ningún estado de
+      resultados.
+    </p>
+  </div>
+</section>
+
+<section>
+  <div class="wrap">
+    <p class="eyebrow">04 · La historia</p>
+    <h2>Esto ya pasó en otros lados, y está medido</h2>
+    <p>
+      Cuando una economía cerrada se abre, la evidencia de Brasil, Chile y Argentina coincide en dos
+      cosas incómodas. La primera: buena parte de "el sector mejoró" quiere decir
+      <strong>"cerraron los peores"</strong>. El promedio sube; la firma promedio no.
+    </p>
+    <p>
+      La segunda es más útil. Lo que separó a las que quedaron no fue producir más barato: fue
+      <strong>estar mejor gestionadas antes</strong>. En la medición comparable entre países que
+      existe, el puntaje de gestión predice productividad, rentabilidad, crecimiento y supervivencia
+      — y dos de las causas identificadas de mala gestión son la competencia débil y la sucesión
+      familiar por primogenitura. Vale decirlo sin anestesia, porque describe con precisión el
+      formato de la distribuidora del interior argentino.
+    </p>
+    <blockquote>
+      <p>La apertura no mata al chico por ser chico. Mata al mal gestionado por dejar de cubrirlo.</p>
+    </blockquote>
+  </div>
+</section>
+
+<section>
+  <div class="wrap">
+    <p class="eyebrow">05 · La tecnología</p>
+    <h2>Qué se puede hacer hoy, y cuánto cuesta de verdad</h2>
+    <p>
+      Si el problema es de información, la pregunta obvia es cuánto cuesta resolverlo. Acá los
+      números son sorprendentes, pero no por el motivo que se repite.
+    </p>
+
+    <div class="caja alerta">
+      <p class="tit">Primero, desarmemos la narrativa</p>
+      <p>
+        "El costo de la IA se derrumba" es cierto arriba y <strong>falso abajo</strong>. El modelo
+        frontera de Anthropic bajó de 15 a 5 dólares por millón de tokens de entrada (−67%). Pero
+        el modelo <em>barato</em> subió: Haiku pasó de 0,80 a 1,00 (+25%), el Flash-Lite de Google
+        subió 150%, y DeepSeek aumentó su modelo más económico entre 57% y 136%.
+      </p>
+      <p style="margin-bottom:0">
+        <strong>La industria está comprimiendo el rango, no derrumbando el piso.</strong> Y el
+        tramo barato es el que usa una PyME. Hay dos trampas más: el tokenizador nuevo produce
+        ~30% más tokens por el mismo texto, así que el precio por token no es el precio por
+        trabajo; y el caché vale 90% de descuento pero se rompe en silencio con cualquier byte que
+        cambie en el prefijo, sin tirar un solo error. Un modelo barato mal cacheado sale más caro
+        que uno caro bien cacheado.
+      </p>
+    </div>
+
+    <p>
+      Dicho eso, el número que importa sigue siendo chico. Un asistente que responde preguntas
+      sobre el ERP de una distribuidora, andando en producción, cuesta
+      <strong>entre USD 10 y 30 por mes</strong> de modelo. Al tipo de cambio mayorista del BCRA
+      del 14 de agosto (1.487,50), son <strong>15.000 a 45.000 pesos mensuales</strong>. Menos que
+      una línea de celular corporativa.
+    </p>
+    <p>
+      Ese número es nuestro, medido en producción, con <strong>N = 1</strong>. Lo escribimos así
+      justamente porque es uno.
+    </p>
+    <p>
+      Y en extracción de documentos el cambio es más nítido. El OCR crudo no se abarató: sigue
+      costando alrededor de USD 1,50 el millar de páginas. Lo que se derrumbó es
+      <strong>convertir ese texto en campos estructurados</strong>, que era el producto caro y
+      especializado: un servicio dedicado cobra USD 50 por mil formularios, y un modelo genérico
+      barato hace lo equivalente por alrededor de USD 3,80. Una caída de unas trece veces en la
+      parte que importa.
+    </p>
+
+    <h3>El costo fijo, que es lo que decide</h3>
+    <p>
+      Hay una medición argentina que conviene tener a mano antes de entusiasmarse. Con la apertura
+      del MERCOSUR, las firmas que enfrentaron más competencia importada sí invirtieron en
+      tecnología — pero el efecto se concentró <em>en el rango medio-alto de la distribución de
+      tamaño</em>. <strong>El que actualizó fue el mediano-grande. El chico no.</strong> El motivo,
+      según el propio modelo, es que había un <strong>costo fijo alto</strong> que solo amortizaba
+      el que vendía mucho. Así que la pregunta no es si el chico puede competir en abstracto: es
+      <strong>dónde está hoy ese umbral</strong>.
+    </p>
+    <p>
+      Y la respuesta honesta es que el costo fijo bajó, pero <strong>no por lo que se cree</strong>.
+      No bajó porque bajó el precio del token — ya vimos que en el tramo barato subió. Bajó porque
+      cambió la forma de implementar: no hay que migrar el sistema de gestión, ni comprar equipos,
+      ni parar la operación. Se lee lo que ya existe y se construye encima.
+    </p>
+    <p>
+      Si esa condición no se cumple —si el proyecto exige cambiar el ERP, o comprar infraestructura,
+      o detener la operación tres semanas— entonces el costo fijo <strong>no</strong> se derrumbó,
+      esa medición de los noventa sigue mandando, y la ventana es para el mediano y no para el
+      chico. Es una pregunta empírica, y depende de cómo se haga cada proyecto.
+    </p>
+  </div>
+</section>
+
+<section>
+  <div class="wrap-wide">
+    <p class="eyebrow">06 · La sección que nadie escribe</p>
+    <h2>Y qué no puede hacer</h2>
+    <p>
+      A todos los que venden esto les conviene decir que sí. Por eso conviene mirar la evidencia
+      del "no", que es abundante y sólida.
+    </p>
+
+    <h3>El estudio del MIT dice otra cosa de la que se repite</h3>
+    <p>
+      Circula como "el 95% de los proyectos de IA fracasan". El informe del MIT dice
+      <strong>"el 95% de las organizaciones están obteniendo retorno cero"</strong>, que no es lo
+      mismo: mide organizaciones sin impacto en el resultado, no proyectos fracasados. Además está
+      rotulado <em>"Preliminary Findings"</em>, se apoya en 52 entrevistas y 153 encuestas hechas en
+      conferencias, y tiene contradicciones internas —dice 50% en un lado y 70% en otro sobre el
+      mismo dato—. Es una señal direccional, y se cita como si fuera un censo.
+    </p>
+    <p>
+      Lo que sí trae, y nadie repite, es el embudo: <strong>60%</strong> de las organizaciones
+      evaluaron herramientas, <strong>20%</strong> llegaron a piloto y apenas <strong>5%</strong>
+      llegaron a producción. Y el dato más útil de todos: las implementaciones
+      <strong>con socio externo llegan a producción el 67% de las veces, contra 33% de los
+      desarrollos internos</strong>. Los desarrollos internos fracasan el doble.
+    </p>
+
+    <div class="caja">
+      <p class="tit">La IA que ya está adentro de tu empresa</p>
+      <p style="margin-bottom:0">
+        Del mismo informe: solo el <strong>40%</strong> de las empresas compró una suscripción
+        oficial, pero en más del <strong>90%</strong> los empleados usan herramientas de IA
+        personales para tareas de trabajo. Y cuando existen las dos, eligen la genérica: dicen que
+        confían más y que las respuestas son mejores, incluso cuando por debajo corre un modelo
+        parecido. La decisión real no es "¿adopto IA?". Ya está adentro. La decisión es si corre
+        dentro de un sistema que pueda verificar lo que dice, o por WhatsApp con datos de clientes.
+      </p>
+    </div>
+
+    <h3>La ganancia individual no se convierte sola en resultado</h3>
+    <p>
+      En Dinamarca cruzaron encuestas de adopción con registros administrativos laborales de once
+      ocupaciones. Los trabajadores dicen ahorrar cerca del 3% de sus horas. El efecto medido sobre
+      ingresos y horas es <strong>cero</strong>, con intervalos que descartan efectos mayores al 2%.
+      El resultado se sostiene incluso entre quienes usan las herramientas a diario y en empresas
+      que invierten en ellas. El mecanismo: el 85% reasigna el tiempo ahorrado a otras tareas.
+    </p>
+    <p>
+      Del otro lado, el retorno existe y está medido: en soporte al cliente, con 5.172 agentes,
+      <strong>+15% de casos resueltos por hora</strong>. Pero en el mismo tipo de estudio, cuando la
+      tarea cae <em>fuera</em> de lo que el modelo hace bien, los consultores que usaron IA
+      acertaron <strong>19 puntos porcentuales menos</strong> que los que no la usaron — sin
+      notarlo.
+    </p>
+    <blockquote>
+      <p>La productividad individual sube y el resultado de la empresa no se mueve. No se contradicen: la ganancia se disipa si nadie rediseña el proceso para capturarla.</p>
+    </blockquote>
+    <p>
+      Y cuando los proyectos fallan, tampoco fallan por donde se supone. Sobre 65 entrevistas a
+      practicantes con más de cinco años de experiencia, la causa número uno es
+      <strong>falla de liderazgo, citada por el 84%</strong>: no se define qué problema resolver ni
+      qué métrica mover. La segunda son los datos. El modelo no aparece arriba de la lista.
+    </p>
+
+    <div class="tres">
+      <div class="col ok">
+        <h4>Retorno demostrado</h4>
+        <ul>
+          <li>Atención repetitiva con respuesta verificable</li>
+          <li>Extracción de campos de documentos estructurados</li>
+          <li>Onboarding de personal nuevo</li>
+          <li>Borradores donde alguien revisa</li>
+        </ul>
+      </div>
+      <div class="col duda">
+        <h4>Plausible, sin medir</h4>
+        <ul>
+          <li>Priorización de cobranzas</li>
+          <li>Detección de descuadres de stock</li>
+          <li>Alertas sobre datos del sistema</li>
+          <li>Reportes narrados sobre cifras ya calculadas</li>
+        </ul>
+      </div>
+      <div class="col no">
+        <h4>La evidencia apunta en contra</h4>
+        <ul>
+          <li>"El agente maneja la empresa solo"</li>
+          <li>"Reemplaza al administrativo"</li>
+          <li>Consultas en lenguaje natural traducidas a consultas directas sobre un ERP viejo</li>
+          <li>Pronóstico de demanda con modelos generativos</li>
+        </ul>
+      </div>
+    </div>
+    <p>
+      Lo que comparten todos los casos con retorno medido: la tarea es estrecha y se repite mucho,
+      existe un criterio de éxito verificable, y el usuario es novato o promedio. En expertos, el
+      efecto es nulo o negativo. Fuera de esa forma, el retorno se desvanece o se da vuelta.
+    </p>
+  </div>
+</section>
+
+<section>
+  <div class="wrap-wide">
+    <p class="eyebrow">07 · El criterio</p>
+    <h2>Dónde tu olfato vale y dónde no puede valer</h2>
+    <p>
+      Kahneman —el escéptico de la intuición— y Klein —su defensor— se sentaron a acordar en qué se
+      diferenciaban. Lo que acordaron sirve como criterio práctico: la intuición experta es
+      confiable <strong>solo si se cumplen dos condiciones a la vez</strong>. Que el entorno sea lo
+      bastante predecible como para que haya regularidades reales, y que la persona haya tenido
+      oportunidad de aprenderlas con práctica y <strong>devolución rápida y clara</strong> de si
+      acertó.
+    </p>
+    <p>
+      Y el corolario que incomoda: la confianza subjetiva no es un indicador confiable de la
+      precisión del juicio. Donde no se cumplen las condiciones, la seguridad del experto sigue
+      alta y el acierto no.
+    </p>
+    <div class="scroll-x">
+      <table>
+        <thead>
+          <tr><th>Decisión</th><th>¿Entorno predecible?</th><th>¿Devolución rápida?</th><th>Veredicto</th></tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>A quién le fío y hasta cuánto</td>
+            <td>Sí — lo conoce hace 15 años</td>
+            <td>Sí — paga o no, en 30/60 días</td>
+            <td class="si">Su olfato vale</td>
+          </tr>
+          <tr>
+            <td>Con qué proveedor pelear el precio</td>
+            <td>Sí</td><td>Sí</td>
+            <td class="si">Su olfato vale</td>
+          </tr>
+          <tr>
+            <td>Qué comprar esta semana</td>
+            <td>Parcial</td><td>Lento y ruidoso</td>
+            <td>Zona gris: el sistema propone, él dispone</td>
+          </tr>
+          <tr>
+            <td>Cuál de 4.000 códigos pierde margen callado</td>
+            <td>No — señal chica entre demasiados ítems</td>
+            <td>No — el daño aparece meses después</td>
+            <td class="no">Nunca tuvo cómo aprenderlo</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+    <blockquote>
+      <p>Nadie tiene intuición sobre algo que nunca le devolvió respuesta.</p>
+    </blockquote>
+    <p>
+      En media tabla gana el dueño. Y eso es lo que hace útil el criterio: no dice que la máquina
+      sea mejor. Dice <strong>dónde</strong>, y por qué. El meta-análisis clásico sobre predicción
+      humana contra fórmula apunta al mismo lugar: el humano es bueno detectando qué variables
+      importan, y malo combinándolas de manera consistente. Se contradice entre el lunes y el
+      jueves. La fórmula no.
+    </p>
+    <p>
+      El dueño sabe qué mirar. El sistema mira eso todos los días.
+    </p>
+
+    <div class="caja">
+      <p class="tit">El límite honesto de la supervisión</p>
+      <p>
+        Lisanne Bainbridge escribió en 1983 la objeción que sigue en pie: si el sistema decide
+        porque el juicio humano no alcanzaba en ese contexto, <em>¿cuál de esas decisiones se
+        supone que el humano va a aprobar o rechazar?</em> Un botón de aprobar sobre algo
+        inverificable no produce control: produce responsabilidad falsa.
+      </p>
+      <p style="margin-bottom:0">
+        De ahí salen dos reglas que aceptamos que nos exijan. <strong>Si una propuesta no se puede
+        chequear en menos de un minuto, no va a modo revisión.</strong> Y <strong>la cola de
+        revisión tiene que ser corta y mayormente cierta</strong>: nadie sostiene atención sobre una
+        fuente donde casi nunca pasa nada, y una cola larga con falsos positivos no se revisa, se
+        aprueba en bloque. Bainbridge ya advertía en el 83 contra "una proliferación de luces rojas
+        parpadeando".
+      </p>
+    </div>
+  </div>
+</section>
+
+<section>
+  <div class="wrap">
+    <p class="eyebrow">08 · El calendario</p>
+    <h2>Cómo se invierte con una elección a catorce meses</h2>
+    <p>
+      Las presidenciales son el <strong>24 de octubre de 2027</strong>. Eso no es un dato de color:
+      tiene efecto medible sobre la inversión y ya se vio acá.
+    </p>
+    <p>
+      Mirá lo que hizo la tasa de adelantos en cuenta corriente —el instrumento con el que una
+      empresa tapa un bache de caja— alrededor de las legislativas de 2025:
+    </p>
+    <div class="figuras">
+      <div class="fig">
+        <span class="n">36,97%</span>
+        <span class="lbl">junio 2025</span>
+        <span class="src">BCRA · TNA promedio mensual</span>
+      </div>
+      <div class="fig">
+        <span class="n down">81,11%</span>
+        <span class="lbl">octubre 2025 · mes de las legislativas</span>
+        <span class="src">BCRA</span>
+      </div>
+      <div class="fig">
+        <span class="n up">25,21%</span>
+        <span class="lbl">mayo 2026</span>
+        <span class="src">BCRA</span>
+      </div>
+    </div>
+    <p>
+      Se multiplicó por 2,2 en cuatro meses y se dividió por tres en los siete siguientes. El tipo
+      de cambio real hizo lo mismo: pico de 98,9 en octubre de 2025, 85,8 en julio de 2026.
+      <strong>El costo del capital de trabajo no lo determinó el negocio: lo determinó el
+      calendario.</strong>
+    </p>
+    <p>
+      <em>(Una aclaración de método: esa serie mide operaciones grandes y cortas de empresas de
+      primera línea. Una PyME del interior no accede a esa tasa. Sirve como termómetro del ciclo,
+      no como el precio que paga un distribuidor de Río Cuarto — ese número no lo tenemos.)</em>
+    </p>
+    <p>
+      La literatura lo confirma en general: en años electorales las empresas recortan la inversión
+      alrededor de <strong>4,8%</strong> respecto de años no electorales, controlando por
+      oportunidades de crecimiento y condiciones económicas. No es que se vuelvan pesimistas: se
+      vuelven <strong>quietas</strong>. Y la quietud se ve igual con la buena y con la mala noticia.
+    </p>
+    <p>
+      La teoría de inversión irreversible explica por qué. Si lo que ponés no lo recuperás, el
+      futuro es incierto y podés esperar, entonces <strong>esperar vale por sí mismo</strong>: tenés
+      una opción, y ejercerla la destruye. Por eso no alcanza con que el proyecto dé positivo.
+      Y por eso <strong>el valor de esperar es proporcional a lo que hundís</strong>: un galpón o
+      una máquina importada a un tipo de cambio dado son apuestas hundidas y direccionales, mientras
+      que una inversión chica, de repago corto y desmontable casi no tiene opción que preservar.
+    </p>
+    <p>
+      Vale la pena la frase de Pindyck, escrita en 1990 y sin pensar en la Argentina:
+      <em>"si el objetivo de política es estimular la inversión, la estabilidad y la credibilidad
+      pueden ser más importantes que los incentivos fiscales o las tasas de interés"</em>.
+    </p>
+
+    <div class="caja">
+      <p class="tit">La prueba de la almohada electoral</p>
+      <p style="margin-bottom:0">
+        Preguntale a cada peso que vayas a poner: <strong>¿el retorno cambia según quién gane en
+        octubre del 27?</strong> Si cambia, es una apuesta política disfrazada de inversión —
+        hacela si querés, sabiendo qué es. Si no cambia, es una inversión de verdad, y el calendario
+        electoral no es excusa para postergarla. Cobrar antes, comprar mejor y dejar de tener plata
+        dormida en góndola rinden con cualquier resultado. Esa propiedad es lo que las hace raras.
+        No la tecnología que usen.
+      </p>
+    </div>
+  </div>
+</section>
+
+<section class="fold">
+  <div class="wrap">
+    <p class="eyebrow">09 · El remate</p>
+    <h2>Lo único que no te fija nadie</h2>
+    <p>
+      Nada de esto dice que la latencia de tus decisiones sea la restricción que más te aprieta.
+      No lo es. Te aprietan más los impuestos, la tasa y que se vende menos, y ninguna de las tres
+      se arregla con un tablero. Lo decimos claro porque es cierto.
+    </p>
+    <p>
+      Tampoco promete que nadie pierda. La lógica de reasignación es de posición relativa, no de
+      inmunidad: si el sector se contrae, mejorar un poco no salva a todos. Y en Brasil el efecto
+      de la limpieza competitiva se desplegó en años, no en trimestres. Cualquiera que insinúe que
+      esto se resuelve antes de octubre del 27 está mintiendo.
+    </p>
+    <p>
+      Lo que sí se paga en meses es el capital de trabajo de una empresa concreta: días de cobranza
+      y rotación de stock. Es una promesa mucho más chica, y es verificable.
+    </p>
+    <blockquote>
+      <p>De todas las restricciones que te aprietan hoy, la única sobre la que tenés autoridad es la tuya propia.</p>
+    </blockquote>
+    <p>
+      El precio te lo fija el mercado. El dólar te lo fija otro. La tasa te la fija el banco, y ya
+      vimos que te la raciona porque no puede evaluarte. El arancel te lo fija un decreto.
+    </p>
+    <p>
+      <strong>El tiempo que tardás en enterarte de lo que ya pasó adentro de tu propia empresa es
+      lo único que no te fija nadie.</strong>
+    </p>
+  </div>
+</section>
+
+
+<div class="wrap">
+  <aside class="cierre-cta">
+    <h2>¿Y en tu empresa cuánto tarda el dato?</h2>
+    <p>Hacemos una radiografía de tu operación con tus propios números, sin tocar lo que ya
+       factura. Si hay algo para construir, lo ves antes de decidir.</p>
+    <a class="btn btn-primario" href="https://calendly.com/nicolasbaseggiodev/30min" target="_blank" rel="noopener">Agendá una charla <span aria-hidden="true">→</span></a>
+  </aside>
+</div>
+
+<footer class="pie">
+  <div class="wrap">
+    <h3>Declaración de interés</h3>
+    <p>
+      Delta 4C vende exactamente lo que este artículo describe: nos conectamos a sistemas de gestión
+      existentes, leemos los datos sin tocar lo que factura, y construimos arriba. El conflicto de
+      interés existe y no se disuelve declarándolo. Lo único que lo compensa es publicar también las
+      condiciones bajo las cuales esto no sirve — el costo fijo que puede no haber bajado, la
+      evidencia danesa de efecto cero, los 19 puntos de caída fuera de la frontera, el límite de
+      Bainbridge a la supervisión. Un texto que no contiene ninguna afirmación capaz de perjudicar a
+      quien lo firma no es un análisis: es un folleto con bibliografía.
+    </p>
+
+    <h3>Lo que no sabemos</h3>
+    <ul>
+      <li>La tasa efectiva que paga una PyME del interior por descontar cheques o por un adelanto. Es probablemente el dato más valioso de todo el artículo y no lo tenemos.</li>
+      <li>La exactitud de la extracción con modelos genéricos sobre documentos argentinos reales. Tenemos el costo, no la precisión: el ahorro no prueba que sirva.</li>
+      <li>Cualquier estudio con evidencia medida sobre PyMEs de 10 a 50 empleados con sistemas viejos. No existe en la literatura que alcanzamos. Todo lo aplicado a ese segmento es inferencia desde otros contextos.</li>
+      <li>Que la latencia específicamente separe a las empresas que sobreviven de las que no. Es hipótesis con respaldo indirecto, no hallazgo.</li>
+      <li>El estado parlamentario de una nueva reforma laboral en 2026.</li>
+    </ul>
+
+    <h3>Fuentes</h3>
+    <ul>
+      <li><strong>Macro:</strong> INDEC vía API de series del Ministerio de Economía (IPC, EMAE, importaciones). BCRA: Informe sobre Bancos de mayo 2026, REM de julio 2026, Encuesta de Condiciones Crediticias del II trimestre 2026, serie ITCRM, estadísticas monetarias v4.0. CAME: índices de Ventas Minoristas PyME (julio 2026) y Producción Industrial PyME (mayo 2026) — de elaboración propia de la entidad, no oficiales.</li>
+      <li><strong>Comercio y gestión:</strong> Muendler (2004) sobre Brasil; Pavcnik (2002) sobre Chile; Bustos, <em>American Economic Review</em> (2011) sobre MERCOSUR; Bloom &amp; Van Reenen (2007) sobre prácticas de gestión.</li>
+      <li><strong>Tecnología y trabajo:</strong> Brynjolfsson, Li &amp; Raymond, <em>Quarterly Journal of Economics</em> (2025); Dell'Acqua et al., HBS 24-013; Humlum &amp; Vestergaard, NBER 33777 (rev. 2026); MIT NANDA, <em>The GenAI Divide</em> (2025, preliminar); RAND RRA2680-1; Kahneman &amp; Klein (2009); Grove et al. (2000); Bainbridge (1983); Pindyck, NBER 3307; Julio &amp; Yook, <em>Journal of Finance</em> (2012).</li>
+      <li><strong>Precios de modelos:</strong> páginas oficiales de Anthropic, OpenAI, Google y DeepSeek, y AWS Textract, consultadas el 15-08-2026.</li>
+    </ul>
+
+    <p class="colofon">
+      Datos verificados al 15-08-2026 · tipo de cambio mayorista BCRA 1.487,50 ARS/USD del 14-08-2026<br>
+      Los importes en pesos hay que recalcularlos al leer · el dato propio de costo operativo es N=1
+    </p>
+  </div>
+</footer>
+</article>
+
+</main>
+
+<footer class="sitio">
+  <div class="marco">
+    <p class="linea"><span class="marca-f">DELTA<span class="punto">·</span>4C</span> · leemos tus datos sin tocar lo que factura · construimos arriba lo que te falta</p>
+    <p class="remate">Tu negocio, más eficiente cada mes.</p>
+  </div>
+</footer>
+
+</body>
+</html>

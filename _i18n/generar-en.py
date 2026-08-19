@@ -230,6 +230,10 @@ TEXTOS = [
      'we build on top of what’s missing'),
     ('Tu negocio, más eficiente cada mes.',
      'Your business, more efficient every month.'),
+    ('<a href="/notas">Notas — análisis y datos de campo</a>',
+     '<a href="/notas" hreflang="es" lang="es">Notes — analysis and field data (in Spanish)</a>'),
+    ('<a href="/notas">Notas</a>',
+     '<a href="/notas" hreflang="es" lang="es">Notes (ES)</a>'),
     ('<p class="idioma"><span class="actual" aria-current="true">ES</span><span class="sep" aria-hidden="true">/</span><a href="/en" hreflang="en" lang="en">EN</a></p>',
      '<p class="idioma"><a href="/" hreflang="es" lang="es">ES</a><span class="sep" aria-hidden="true">/</span><span class="actual" aria-current="true">EN</span></p>'),
 ]
