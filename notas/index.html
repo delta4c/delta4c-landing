@@ -1,0 +1,441 @@
+<!doctype html>
+<!--
+  DELTA·4C — indice de /notas
+  Se edita a mano: cada nota publicada suma un <li> a la lista. Sin build ni CMS,
+  igual que el resto del sitio. La hoja de estilo es la misma que la de cada nota.
+-->
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Notas — Delta 4C</title>
+<meta name="description" content="Notas de campo de Delta 4C: bajamos lo que pasa en el mundo al barro de la PyME argentina. Cada nota lleva al menos un dato del terreno.">
+<link rel="canonical" href="https://delta4c.com/notas">
+
+<meta property="og:type" content="website">
+<meta property="og:locale" content="es_AR">
+<meta property="og:site_name" content="Delta 4C">
+<meta property="og:url" content="https://delta4c.com/notas">
+<meta property="og:title" content="Notas — Delta 4C">
+<meta property="og:description" content="Notas de campo de Delta 4C: bajamos lo que pasa en el mundo al barro de la PyME argentina. Cada nota lleva al menos un dato del terreno.">
+<meta property="og:image" content="https://delta4c.com/og.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="Delta 4C">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Notas — Delta 4C">
+<meta name="twitter:description" content="Notas de campo de Delta 4C: bajamos lo que pasa en el mundo al barro de la PyME argentina. Cada nota lleva al menos un dato del terreno.">
+<meta name="twitter:image" content="https://delta4c.com/og.png">
+<meta name="theme-color" content="#ffffff">
+
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'><defs><linearGradient id='g' x1='0' y1='1' x2='1' y2='0'><stop offset='0' stop-color='%234C6DBC'/><stop offset='1' stop-color='%23CC9744'/></linearGradient></defs><rect width='64' height='64' rx='14' fill='%230A0A12'/><path d='M32 15 L51 49 H13 Z' fill='url(%23g)'/></svg>">
+<link rel="icon" type="image/png" sizes="512x512" href="/favicon.png">
+<link rel="apple-touch-icon" href="/apple-touch-icon.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,400..800&family=Figtree:ital,wght@0,400..700;1,400..700&display=swap" rel="stylesheet">
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "Blog",
+  "name": "Notas — Delta 4C",
+  "description": "Notas de campo de Delta 4C: bajamos lo que pasa en el mundo al barro de la PyME argentina. Cada nota lleva al menos un dato del terreno.",
+  "url": "https://delta4c.com/notas",
+  "inLanguage": "es-AR",
+  "publisher": {
+    "@type": "Organization",
+    "name": "Delta 4C",
+    "url": "https://delta4c.com/",
+    "logo": {
+      "@type": "ImageObject",
+      "url": "https://delta4c.com/logo.png"
+    }
+  },
+  "blogPost": [
+    {
+      "@type": "BlogPosting",
+      "headline": "La economía crece y vos no",
+      "url": "https://delta4c.com/notas/la-economia-crece-y-vos-no",
+      "datePublished": "2026-08-16",
+      "author": {
+        "@type": "Person",
+        "name": "Nicolás Baseggio"
+      }
+    }
+  ]
+}
+</script>
+
+<style>
+/* ============================== TOKENS ==============================
+   Los mismos de index.html. Tres agregados que la landing no necesitaba:
+   un neutro suave para cajas y un rojo para los números que caen.       */
+:root{
+  --bg:#ffffff;
+  --ink:#242a3d; --ink-2:#525c76; --ink-3:#8d94ad;
+  --line:#e5e7ef; --line-2:#d5d9e5;
+  --naranja:#e0763b; --naranja-deep:#b1531b; --naranja-tinte:#fdf1e7;
+  --verde:#22795a; --verde-deep:#155c42; --verde-tinte:#eaf5ef;
+  --navy:#1b2134;
+  --tinte-n:#f7f8fb;                      /* nuevo: cajas y encabezados de tabla */
+  --rojo:#b3392e; --rojo-tinte:#fdf0ee;   /* nuevo: la caída, el "no" */
+  --exp:cubic-bezier(.16,1,.3,1);
+  --e-quart:cubic-bezier(.25,1,.5,1);
+  --f-d:"Bricolage Grotesque",system-ui,sans-serif;
+  --f-t:"Figtree",system-ui,sans-serif;
+  --f-m:ui-monospace,SFMono-Regular,"SF Mono",Menlo,Consolas,"Liberation Mono",monospace;
+}
+@supports (color: oklch(0% 0 0)){
+  :root{
+    --ink:oklch(25% .03 265); --ink-2:oklch(45% .033 265); --ink-3:oklch(65% .025 265);
+    --line:oklch(91.5% .008 265); --line-2:oklch(86% .012 265);
+    --naranja:oklch(68% .17 45); --naranja-deep:oklch(54% .145 45); --naranja-tinte:oklch(96.5% .022 60);
+    --verde:oklch(50% .1 160); --verde-deep:oklch(41% .09 160); --verde-tinte:oklch(96.2% .02 165);
+    --navy:oklch(23% .032 265);
+    --tinte-n:oklch(97.6% .005 265);
+    --rojo:oklch(48% .15 28); --rojo-tinte:oklch(96.5% .018 30);
+  }
+}
+
+/* ============================== BASE ============================== */
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+html,body{overflow-x:clip}
+body{
+  font:400 1.0625rem/1.72 var(--f-t);
+  color:var(--ink); background:var(--bg);
+  -webkit-font-smoothing:antialiased; text-rendering:optimizeLegibility;
+}
+::selection{background:var(--naranja-tinte);color:var(--ink)}
+img,svg{max-width:100%;height:auto}
+a{color:inherit}
+:focus-visible{outline:2px solid var(--naranja-deep);outline-offset:3px;border-radius:4px}
+.sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
+.wrap{width:min(720px,92vw);margin-inline:auto}
+.wrap-wide{width:min(720px,92vw);margin-inline:auto}
+.wrap-wide > .scroll-x,
+.wrap-wide > .figuras,
+.wrap-wide > .tres{
+  width:min(920px,92vw);
+  margin-inline:calc((min(720px,92vw) - min(920px,92vw)) / 2);
+}
+.marco{width:min(1160px,92vw);margin-inline:auto}
+
+/* ============================== HEADER DEL SITIO ============================== */
+header.sitio{
+  position:sticky;top:0;z-index:50;
+  background:#fff;border-bottom:1px solid var(--line);
+}
+header.sitio .barra{
+  width:min(1160px,92vw);margin-inline:auto;
+  display:flex;align-items:center;gap:2rem;
+  padding-block:.95rem;
+}
+header.sitio .logo{display:inline-flex;align-items:center;text-decoration:none}
+header.sitio .logo img{height:32px;width:auto;display:block;flex:none}
+.navlinks{display:flex;gap:1.7rem;margin-left:auto}
+.navlinks a{
+  font:500 .98rem/1 var(--f-t);color:var(--ink-2);text-decoration:none;
+  transition:color .3s var(--exp);
+}
+.navlinks a:hover{color:var(--ink)}
+.navlinks a[aria-current="page"]{color:var(--ink);font-weight:650}
+.nav-cta{
+  font:600 .95rem/1 var(--f-t);color:var(--naranja-deep);text-decoration:none;
+  border:1.5px solid var(--line-2);border-radius:999px;padding:.62rem 1.05rem;
+  transition:border-color .3s var(--exp),transform .3s var(--exp),box-shadow .3s var(--exp);
+  white-space:nowrap;margin-left:auto;
+}
+.navlinks ~ .nav-cta{margin-left:1.5rem}
+.nav-cta:hover{border-color:var(--naranja);transform:translateY(-1px);box-shadow:0 8px 20px -12px rgba(180,87,28,.5)}
+@media (max-width:760px){ .navlinks{display:none} .navlinks ~ .nav-cta{margin-left:auto} }
+@media (max-width:430px){ .nav-cta{font-size:.86rem;padding:.55rem .85rem} }
+
+/* barra de progreso de lectura — sin JS, sin dependencias */
+.progreso{position:fixed;top:0;left:0;right:0;height:2px;z-index:60;pointer-events:none}
+.progreso i{display:block;height:100%;background:var(--naranja);transform-origin:0 50%;transform:scaleX(0)}
+@supports (animation-timeline:scroll()){
+  .progreso i{animation:leido linear;animation-timeline:scroll(root block)}
+  @keyframes leido{from{transform:scaleX(0)}to{transform:scaleX(1)}}
+}
+@media (prefers-reduced-motion:reduce){ .progreso{display:none} }
+
+/* ============================== CABEZA DEL ARTÍCULO ============================== */
+.volver{
+  display:inline-block;margin-top:2.2rem;
+  font:600 .92rem/1 var(--f-t);color:var(--ink-2);text-decoration:none;
+  transition:color .3s var(--exp);
+}
+.volver:hover{color:var(--naranja-deep)}
+header.top{padding:1.6rem 0 2.4rem;border-bottom:1px solid var(--line)}
+.brand{
+  font:600 .8rem/1.2 var(--f-t);letter-spacing:.13em;text-transform:uppercase;
+  color:var(--naranja-deep);margin:0 0 1.3rem;
+}
+h1{
+  font-family:var(--f-d);font-size:clamp(2.35rem,5.6vw,3.6rem);font-weight:750;
+  line-height:1.04;letter-spacing:-.03em;margin:0 0 1.3rem;text-wrap:balance;
+}
+.bajada{font-size:clamp(1.12rem,1.5vw,1.24rem);line-height:1.6;color:var(--ink-2);margin:0 0 1.7rem;max-width:56ch}
+.firma{display:flex;flex-wrap:wrap;gap:.55rem;align-items:center}
+.firma span{
+  font:400 .78rem/1 var(--f-m);color:var(--ink-2);
+  border:1px solid var(--line-2);border-radius:999px;padding:.42rem .7rem;
+}
+.firma .autor{color:var(--ink);font-weight:600;border-color:var(--ink-3)}
+
+/* ============================== CUERPO ============================== */
+main section{padding:3rem 0;border-bottom:1px solid var(--line)}
+main section:last-of-type{border-bottom:none}
+h2{
+  font-family:var(--f-d);font-size:clamp(1.5rem,3.2vw,2rem);font-weight:700;
+  line-height:1.16;letter-spacing:-.022em;margin:0 0 .5rem;text-wrap:balance;
+}
+.eyebrow{
+  font:600 .72rem/1.2 var(--f-t);letter-spacing:.14em;text-transform:uppercase;
+  color:var(--ink-3);margin:0 0 .9rem;
+}
+h3{
+  font-family:var(--f-d);font-size:1.16rem;font-weight:650;letter-spacing:-.015em;
+  margin:2rem 0 .6rem;
+}
+p{margin:0 0 1.1rem}
+p:last-child{margin-bottom:0}
+main a{color:var(--naranja-deep);text-underline-offset:3px;text-decoration-color:rgba(177,83,27,.4)}
+main a:hover{text-decoration-color:currentColor}
+ul,ol{margin:0 0 1.1rem;padding-left:1.25em}
+li{margin-bottom:.6rem}
+li::marker{color:var(--ink-3)}
+strong{font-weight:650}
+.lede{font-size:1.16rem;line-height:1.62}
+
+/* el dato grande */
+.figuras{display:grid;gap:1px;background:var(--line);border:1px solid var(--line);border-radius:14px;overflow:clip;margin:1.7rem 0}
+@media (min-width:640px){ .figuras{grid-template-columns:repeat(3,1fr)} }
+.fig{background:#fff;padding:1.3rem 1.15rem}
+.fig .n{
+  font-family:var(--f-d);font-weight:750;font-size:1.95rem;letter-spacing:-.03em;
+  font-variant-numeric:tabular-nums;display:block;margin-bottom:.35rem;
+}
+.fig .n.up{color:var(--verde-deep)}
+.fig .n.down{color:var(--rojo)}
+.fig .lbl{font-size:.92rem;color:var(--ink-2);line-height:1.45;display:block}
+.fig .src{font:400 .68rem/1.3 var(--f-m);color:var(--ink-3);margin-top:.6rem;display:block;letter-spacing:.02em}
+
+/* la frase que se subraya */
+blockquote{
+  margin:1.9rem 0;padding:0 0 0 1.25rem;border-left:2.5px solid var(--naranja);
+  font-family:var(--f-d);font-size:1.28rem;line-height:1.34;font-weight:650;letter-spacing:-.02em;
+  text-wrap:balance;
+}
+blockquote p{margin:0}
+blockquote cite{
+  display:block;font:400 .75rem/1.4 var(--f-m);font-style:normal;
+  color:var(--ink-3);margin-top:.7rem;letter-spacing:.03em;
+}
+
+/* apartados */
+.caja{
+  background:var(--tinte-n);border:1px solid var(--line);border-radius:16px;
+  padding:1.4rem 1.5rem;margin:1.7rem 0;font-size:.99rem;
+}
+.caja .tit{
+  font:600 .72rem/1.2 var(--f-t);letter-spacing:.13em;text-transform:uppercase;
+  color:var(--verde-deep);margin:0 0 .7rem;
+}
+.caja p{margin-bottom:.75rem}
+.caja p:last-child{margin-bottom:0}
+.caja.alerta{background:var(--naranja-tinte);border-color:#f0d7c2}
+.caja.alerta .tit{color:var(--naranja-deep)}
+
+/* tablas */
+.scroll-x{overflow-x:auto;margin:1.7rem 0;border:1px solid var(--line);border-radius:14px}
+table{border-collapse:collapse;width:100%;font-size:.92rem;min-width:480px}
+th,td{text-align:left;padding:.72rem .95rem;border-bottom:1px solid var(--line);vertical-align:top}
+thead th{
+  font:500 .68rem/1.3 var(--f-m);letter-spacing:.09em;text-transform:uppercase;
+  color:var(--ink-3);background:var(--tinte-n);border-bottom:1px solid var(--line-2);
+}
+tbody tr:last-child td{border-bottom:none}
+td.num{font-family:var(--f-m);font-variant-numeric:tabular-nums;white-space:nowrap}
+td.si{color:var(--verde-deep);font-weight:650}
+td.no{color:var(--rojo);font-weight:650}
+
+/* el pliegue oscuro — mismo tratamiento que el panel de CTA de la landing */
+.fold{background:var(--navy);color:#fff;border-bottom:none !important;padding:clamp(3.2rem,6vw,4.6rem) 0}
+.fold h2{color:#fff}
+.fold h3{color:#fff}
+.fold p,.fold li{color:#c8cddd}
+.fold .eyebrow{color:#8c94ab}
+.fold strong{color:#fff}
+.fold li::marker{color:#6f7793}
+.fold blockquote{border-left-color:var(--naranja);color:#fff}
+.fold blockquote cite{color:#aab0c4}
+.fold .caja{background:rgba(255,255,255,.05);border-color:rgba(255,255,255,.14)}
+.fold .caja p{color:#dfe3ee}
+.fold a{color:#dfe3ee;text-decoration-color:rgba(255,255,255,.35)}
+.fold a:hover{color:#fff}
+
+/* tres columnas de veredicto */
+.tres{display:grid;gap:.9rem;margin:1.7rem 0}
+@media (min-width:760px){ .tres{grid-template-columns:repeat(3,1fr)} }
+.col{border:1px solid var(--line-2);background:#fff;border-radius:16px;padding:1.15rem}
+.col h4{
+  margin:0 0 .8rem;font:600 .72rem/1.2 var(--f-t);letter-spacing:.12em;text-transform:uppercase;
+}
+.col.ok h4{color:var(--verde-deep)}
+.col.duda h4{color:var(--naranja-deep)}
+.col.no h4{color:var(--rojo)}
+.col ul{padding-left:1.1em;margin:0}
+.col li{font-size:.92rem;color:var(--ink-2);margin-bottom:.55rem}
+.col li:last-child{margin-bottom:0}
+.fold .col{background:rgba(255,255,255,.04);border-color:rgba(255,255,255,.14)}
+.fold .col li{color:#c8cddd}
+
+/* ============================== CIERRE + PIE ============================== */
+.cierre-cta{
+  background:var(--navy);color:#fff;border-radius:26px;text-align:center;
+  padding:clamp(2.4rem,5vw,3.4rem) clamp(1.4rem,4vw,3rem);margin:3.5rem 0 0;
+}
+.cierre-cta h2{color:#fff;font-size:clamp(1.6rem,3.4vw,2.2rem);margin-bottom:.9rem}
+.cierre-cta p{color:#c8cddd;max-width:52ch;margin:0 auto 1.8rem}
+.btn{
+  display:inline-flex;align-items:center;gap:.5rem;
+  font:600 1.05rem/1 var(--f-t);text-decoration:none;
+  padding:1rem 1.6rem;border-radius:999px;
+  transition:transform .35s var(--exp),box-shadow .35s var(--exp),background-color .35s var(--exp);
+}
+.btn-primario{background:var(--naranja-deep);color:#fff;box-shadow:0 14px 30px -14px rgba(177,83,27,.75)}
+.btn-primario:hover{transform:translateY(-2px);box-shadow:0 20px 40px -16px rgba(177,83,27,.85)}
+@media (prefers-reduced-motion:reduce){ .btn:hover,.nav-cta:hover{transform:none} }
+
+footer.pie{padding:2.6rem 0 0;font-size:.95rem;color:var(--ink-2);border-top:1px solid var(--line)}
+footer.pie h3{font-size:1.02rem;margin-top:1.7rem;color:var(--ink)}
+footer.pie h3:first-child{margin-top:0}
+footer.pie ul{padding-left:1.1em}
+footer.pie li{margin-bottom:.4rem;font-size:.92rem}
+.colofon{
+  font:400 .78rem/1.7 var(--f-m);color:var(--ink-3);margin-top:2.1rem;
+  padding-top:1.2rem;border-top:1px solid var(--line);
+}
+footer.sitio{border-top:1px solid var(--line);padding-block:2.6rem 3rem;text-align:center;margin-top:3.5rem}
+footer.sitio .linea{font-size:.98rem;color:var(--ink-2);margin-bottom:.75rem}
+footer.sitio .marca-f{font:700 1.02rem/1 var(--f-d);color:var(--ink)}
+footer.sitio .marca-f .punto{color:var(--naranja-deep)}
+footer.sitio .remate{font-family:var(--f-d);font-size:1.35rem;font-weight:650;letter-spacing:-.02em}
+
+/* ============================== ÍNDICE DE NOTAS ============================== */
+.tapa{padding:clamp(3rem,7vw,4.6rem) 0 clamp(2rem,4vw,2.8rem)}
+.tapa h1{font-size:clamp(2.6rem,6.5vw,4.1rem);margin-bottom:1.2rem}
+.tapa .tesis{font-size:clamp(1.15rem,1.6vw,1.32rem);line-height:1.55;color:var(--ink-2);max-width:46ch}
+.reglas{
+  display:flex;flex-wrap:wrap;gap:.6rem;margin-top:1.9rem;
+}
+.reglas span{
+  font:500 .82rem/1.35 var(--f-t);color:var(--ink-2);
+  background:var(--tinte-n);border:1px solid var(--line);border-radius:999px;padding:.5rem .95rem;
+}
+.lista{padding:0;list-style:none;margin:0 0 clamp(2.4rem,5vw,3.4rem)}
+.lista li:last-child{border-bottom:1px solid var(--line)}
+.lista li{margin:0;border-top:1px solid var(--line)}
+.entrada{
+  display:block;text-decoration:none;color:inherit;
+  padding:2.1rem 0;
+  transition:background-color .3s var(--exp);
+}
+.entrada:hover{background:var(--tinte-n)}
+.entrada:hover h2{color:var(--naranja-deep)}
+.meta{display:flex;flex-wrap:wrap;gap:.75rem;align-items:center;margin-bottom:.75rem}
+.carril{
+  font:600 .7rem/1.2 var(--f-t);letter-spacing:.13em;text-transform:uppercase;
+  color:var(--verde-deep);background:var(--verde-tinte);border-radius:999px;padding:.4rem .75rem;
+}
+.meta time,.meta .lectura{font:400 .78rem/1 var(--f-m);color:var(--ink-3);letter-spacing:.02em}
+.entrada h2{font-size:clamp(1.6rem,3.4vw,2.15rem);margin-bottom:.6rem;transition:color .3s var(--exp)}
+.entrada p{color:var(--ink-2);max-width:60ch;font-size:1.02rem;margin:0}
+.entrada .seguir{
+  display:inline-block;margin-top:1rem;
+  font:600 .95rem/1 var(--f-t);color:var(--naranja-deep);
+}
+.proximas{
+  padding:0;margin-bottom:clamp(3rem,6vw,4.5rem);
+  font-size:.98rem;color:var(--ink-2);
+}
+.proximas .tit{
+  font:600 .72rem/1.2 var(--f-t);letter-spacing:.13em;text-transform:uppercase;
+  color:var(--ink-3);margin:0 0 .9rem;
+}
+.proximas ul{list-style:none;padding:0;margin:0}
+.proximas li{
+  padding-left:1.4rem;position:relative;margin-bottom:.6rem;color:var(--ink-2);
+}
+.proximas li::before{
+  content:"";position:absolute;left:0;top:.62em;
+  width:.5rem;height:.5rem;border:1.5px solid var(--line-2);border-radius:50%;
+}
+</style>
+</head>
+<body>
+
+<header class="sitio">
+  <div class="barra">
+    <a class="logo" href="/" aria-label="Delta 4C"><img src="/logo.png" alt="" width="55" height="32" decoding="async"></a>
+    <nav class="navlinks" aria-label="Secciones">
+      <a href="/#problema">El problema real</a>
+      <a href="/#ciclo">Cómo trabajamos</a>
+      <a href="/#nosotros">Por qué nosotros</a>
+      <a href="/notas" aria-current="page">Notas</a>
+    </nav>
+    <a class="nav-cta" href="https://calendly.com/nicolasbaseggiodev/30min" target="_blank" rel="noopener">Agendá una charla <span aria-hidden="true">→</span></a>
+  </div>
+</header>
+
+<main>
+
+<div class="wrap">
+  <section class="tapa">
+    <h1>Notas</h1>
+    <p class="tesis">Bajamos lo que pasa en el mundo al barro de la PyME argentina.</p>
+    <div class="reglas">
+      <span>Solo entra lo que mueve un número en el presupuesto de alguien</span>
+      <span>Cada nota lleva al menos un dato del terreno</span>
+    </div>
+  </section>
+
+  <ul class="lista">
+    <li>
+      <a class="entrada" href="/notas/la-economia-crece-y-vos-no">
+        <div class="meta">
+          <span class="carril">Análisis</span>
+          <time datetime="2026-08-16">16 de agosto de 2026</time>
+          <span class="lectura">lectura: 14 min</span>
+        </div>
+        <h2>La economía crece y vos no</h2>
+        <p>El país proyecta 2,7% de crecimiento. Las ventas minoristas PyME cayeron 3,8%. Las dos cosas son ciertas al mismo tiempo, y entender por qué es entender qué cambió en el negocio de una PyME argentina.</p>
+        <span class="seguir">Leer la nota <span aria-hidden="true">→</span></span>
+      </a>
+    </li>
+  </ul>
+
+  <div class="proximas">
+    <p class="tit">En preparación</p>
+    <ul>
+      <li>El índice de problemas comunes que encontramos en PyMEs argentinas, con la N de cada uno</li>
+      <li>Ciclos de una semana y demo los viernes: el método YC bajado a una PyME de Río Cuarto</li>
+      <li>Por qué la mayoría de los proyectos de IA en PyMEs no llega a producción</li>
+    </ul>
+  </div>
+</div>
+
+</main>
+
+<footer class="sitio">
+  <div class="marco">
+    <p class="linea"><span class="marca-f">DELTA<span class="punto">·</span>4C</span> · leemos tus datos sin tocar lo que factura · construimos arriba lo que te falta</p>
+    <p class="remate">Tu negocio, más eficiente cada mes.</p>
+  </div>
+</footer>
+
+</body>
+</html>

@@ -13,4 +13,12 @@
     <xhtml:link rel="alternate" hreflang="en" href="https://delta4c.com/en"/>
     <xhtml:link rel="alternate" hreflang="x-default" href="https://delta4c.com/"/>
   </url>
+  <url>
+    <loc>https://delta4c.com/notas</loc>
+    <lastmod>2026-08-16</lastmod>
+  </url>
+  <url>
+    <loc>https://delta4c.com/notas/la-economia-crece-y-vos-no</loc>
+    <lastmod>2026-08-16</lastmod>
+  </url>
 </urlset>
